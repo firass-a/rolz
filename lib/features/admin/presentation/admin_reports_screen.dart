@@ -6,6 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -38,19 +39,19 @@ IconData _targetIcon(ReportTargetType type) {
 String _resolveTargetLabel(WidgetRef ref, ReportModel report) {
   switch (report.targetType) {
     case ReportTargetType.user:
-      return MockData.userById(report.targetId)?.fullName ?? 'Unknown user';
+      return MockData.userById(report.targetId)?.fullName ?? AppStrings.unknownUser;
     case ReportTargetType.talent:
-      return ref.watch(talentByIdProvider(report.targetId))?.fullName ?? 'Unknown talent';
+      return ref.watch(talentByIdProvider(report.targetId))?.fullName ?? AppStrings.unknownTalent;
     case ReportTargetType.recruiter:
-      return ref.watch(recruiterByIdProvider(report.targetId))?.companyName ?? 'Unknown recruiter';
+      return ref.watch(recruiterByIdProvider(report.targetId))?.companyName ?? AppStrings.unknownRecruiter;
     case ReportTargetType.casting:
-      return ref.watch(castingByIdProvider(report.targetId))?.title ?? 'Unknown casting';
+      return ref.watch(castingByIdProvider(report.targetId))?.title ?? AppStrings.unknownCasting;
     case ReportTargetType.message:
       final message = ref.watch(messageProvider).firstWhereOrNull((m) => m.id == report.targetId);
-      return message?.content.truncate(60) ?? 'Deleted message';
+      return message?.content.truncate(60) ?? AppStrings.deletedMessage;
     case ReportTargetType.review:
       final review = ref.watch(reviewProvider).firstWhereOrNull((r) => r.id == report.targetId);
-      return review?.comment.truncate(60) ?? 'Deleted review';
+      return review?.comment.truncate(60) ?? AppStrings.deletedReview;
   }
 }
 
@@ -78,35 +79,38 @@ class _AdminReportsScreenState extends ConsumerState<AdminReportsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: 'Review Reports',
+        title: AppStrings.reviewReports,
         showBackButton: true,
         actions: [
           if (pendingCount > 0)
             Padding(
               padding: const EdgeInsets.only(right: AppSpacing.sm),
-              child: Center(child: StatusBadge.error('$pendingCount pending')),
+              child: Center(child: StatusBadge.error(AppStrings.pendingCount(pendingCount))),
             ),
         ],
       ),
       body: Column(
         children: [
           const SizedBox(height: AppSpacing.sm),
-          FilterChipBar(
-            selectedValue: _statusFilter,
-            onSelected: (v) => setState(() => _statusFilter = v ?? _kAllStatus),
-            items: [
-              const FilterChipItem(value: _kAllStatus, label: 'All'),
-              ...ReportStatus.values.map((s) => FilterChipItem(value: s.name, label: s.label)),
-            ],
+          SizedBox(
+            height: 44,
+            child: FilterChipBar(
+              selectedValue: _statusFilter,
+              onSelected: (v) => setState(() => _statusFilter = v ?? _kAllStatus),
+              items: [
+                FilterChipItem(value: _kAllStatus, label: AppStrings.all),
+                ...ReportStatus.values.map((s) => FilterChipItem(value: s.name, label: s.label)),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: reports.isEmpty
-                ? const Center(
+                ? Center(
                     child: EmptyState(
                       icon: Iconsax.flag,
-                      title: 'No Reports',
-                      subtitle: 'Nothing to review for this filter.',
+                      title: AppStrings.noReports,
+                      subtitle: AppStrings.noReportsSubtitle,
                       compact: true,
                     ),
                   )
@@ -178,7 +182,7 @@ class _ReportRow extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
-                    Text('Reported by ${reporter?.fullName ?? 'Unknown'}', style: AppTextStyles.bodySmall),
+                    Text(AppStrings.reportedBy(reporter?.fullName ?? AppStrings.unknown), style: AppTextStyles.bodySmall),
                   ],
                 ),
               ),
@@ -203,29 +207,29 @@ class _ReportRow extends ConsumerWidget {
               const Spacer(),
               if (report.status == ReportStatus.pending) ...[
                 _ActionButton(
-                  label: 'Dismiss',
+                  label: AppStrings.dismiss,
                   color: AppColors.textMuted,
                   onTap: () {
                     notifier.updateStatus(report.id, ReportStatus.dismissed);
-                    context.showSnack('Report dismissed.');
+                    context.showSnack(AppStrings.reportDismissedSnack);
                   },
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 _ActionButton(
-                  label: 'Resolve',
+                  label: AppStrings.resolve,
                   color: AppColors.success,
                   onTap: () {
                     notifier.updateStatus(report.id, ReportStatus.resolved);
-                    context.showSnack('Report resolved.');
+                    context.showSnack(AppStrings.reportResolvedSnack);
                   },
                 ),
               ] else
                 _ActionButton(
-                  label: 'Reopen',
+                  label: AppStrings.reopen,
                   color: AppColors.gold,
                   onTap: () {
                     notifier.updateStatus(report.id, ReportStatus.pending);
-                    context.showSnack('Report reopened.');
+                    context.showSnack(AppStrings.reportReopenedSnack);
                   },
                 ),
             ],

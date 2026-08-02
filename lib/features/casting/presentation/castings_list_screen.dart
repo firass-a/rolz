@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/utils/formatters.dart';
@@ -64,14 +65,14 @@ class _CastingsListScreenState extends ConsumerState<CastingsListScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Castings', showBackButton: false),
+      appBar: CustomAppBar(title: AppStrings.navCastings, showBackButton: false),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.md),
             child: KrSearchBar(
               controller: _searchController,
-              hintText: 'Search castings…',
+              hintText: AppStrings.searchCastings,
               onChanged: (value) => ref.read(discoverFiltersProvider.notifier).setCastingQuery(value),
             ),
           ),
@@ -89,7 +90,7 @@ class _CastingsListScreenState extends ConsumerState<CastingsListScreen> {
                     );
               },
               items: [
-                const FilterChipItem(value: 'all', label: 'All'),
+                FilterChipItem(value: 'all', label: AppStrings.all),
                 ...CastingType.values.map((c) => FilterChipItem(value: c.name, label: c.label)),
               ],
             ),
@@ -97,7 +98,7 @@ class _CastingsListScreenState extends ConsumerState<CastingsListScreen> {
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: castings.isEmpty
-                ? const Center(
+                ? Center(
                     child: EmptyState(
                       title: AppStrings.emptySearchTitle,
                       subtitle: AppStrings.emptySearchSubtitle,
@@ -114,9 +115,9 @@ class _CastingsListScreenState extends ConsumerState<CastingsListScreen> {
                           : ref.watch(isFavoriteProvider(
                               (userId: userId, itemId: casting.id, type: FavoriteItemType.casting)));
                       return KrCastingCard(
-                        title: casting.title,
+                        title: DisplayLocalizer.t(casting.title),
                         bannerUrl: casting.bannerUrl,
-                        role: casting.role,
+                        role: DisplayLocalizer.t(casting.role),
                         location: casting.locationLabel,
                         salaryLabel:
                             Formatters.formatSalary(casting.salary, currency: casting.currency),

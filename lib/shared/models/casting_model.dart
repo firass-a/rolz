@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 
+import '../../core/constants/app_strings.dart';
+import '../../core/l10n/display_localizer.dart';
+import '../../core/l10n/locale_controller.dart';
 import 'enums.dart';
 
 /// A casting call/job post created by a [RecruiterModel] (optionally on
@@ -85,10 +88,13 @@ class CastingModel extends Equatable {
 
   String get ageRangeLabel => '$ageMin-$ageMax yrs';
 
-  String get locationLabel => '$city, $country';
+  String get locationLabel {
+    final sep = LocaleController.isArabic ? '، ' : ', ';
+    return '${DisplayLocalizer.t(city)}$sep${DisplayLocalizer.t(country)}';
+  }
 
   String get salaryLabel =>
-      salary > 0 ? '${salary.toStringAsFixed(0)} $currency' : 'Negotiable';
+      salary > 0 ? '${salary.toStringAsFixed(0)} $currency' : AppStrings.negotiable;
 
   bool get isExpired => DateTime.now().isAfter(applicationDeadline);
 

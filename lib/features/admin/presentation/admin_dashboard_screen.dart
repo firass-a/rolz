@@ -6,6 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/widgets.dart';
@@ -31,12 +32,12 @@ class AdminDashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(title: 'Admin Console', showBackButton: !embedded),
+      appBar: CustomAppBar(title: AppStrings.adminConsole, showBackButton: !embedded),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.xxxl),
         children: [
           Text(
-            'Platform Overview',
+            AppStrings.platformOverview,
             style: AppTextStyles.sectionTitle,
           ).animate().fadeIn(duration: 350.ms),
           const SizedBox(height: AppSpacing.md),
@@ -48,23 +49,23 @@ class AdminDashboardScreen extends ConsumerWidget {
             crossAxisSpacing: AppSpacing.sm,
             childAspectRatio: 1.35,
             children: [
-              KrStatCard(icon: Iconsax.user, value: '${talents.length + recruiters.length}', label: 'Total Users'),
-              KrStatCard(icon: Iconsax.briefcase, value: '$openCastings', label: 'Open Castings'),
+              KrStatCard(icon: Iconsax.user, value: '${talents.length + recruiters.length}', label: AppStrings.totalUsers),
+              KrStatCard(icon: Iconsax.briefcase, value: '$openCastings', label: AppStrings.openCastings),
               KrStatCard(
                 icon: Iconsax.flag,
                 value: '$pendingReports',
-                label: 'Pending Reports',
+                label: AppStrings.pendingReports,
                 iconColor: pendingReports > 0 ? AppColors.error : AppColors.gold,
               ),
-              KrStatCard(icon: Iconsax.shield_tick, value: '$verifiedTalents', label: 'Verified Talents'),
+              KrStatCard(icon: Iconsax.shield_tick, value: '$verifiedTalents', label: AppStrings.verifiedTalents),
             ],
           ).animate().fadeIn(delay: 100.ms, duration: 350.ms).slideY(begin: 0.06, end: 0),
           const SizedBox(height: AppSpacing.xxl),
-          const _SectionLabel('Moderation Tools'),
+          _SectionLabel(AppStrings.moderationTools),
           _ToolCard(
             icon: Iconsax.profile_2user,
-            title: 'Manage Users',
-            subtitle: 'Suspend, verify or ban accounts',
+            title: AppStrings.manageUsers,
+            subtitle: AppStrings.manageUsersSubtitle,
             onTap: () => embedded
                 ? context.go(RouteNames.discover)
                 : context.push(RouteNames.adminUsers),
@@ -72,23 +73,23 @@ class AdminDashboardScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.sm),
           _ToolCard(
             icon: Iconsax.flag,
-            title: 'Review Reports',
-            subtitle: '$pendingReports pending report${pendingReports == 1 ? '' : 's'}',
+            title: AppStrings.reviewReports,
+            subtitle: AppStrings.pendingReportsToolSubtitle(pendingReports),
             highlighted: pendingReports > 0,
             onTap: () => context.push(RouteNames.adminReports),
           ),
           const SizedBox(height: AppSpacing.sm),
           _ToolCard(
             icon: Iconsax.shield_tick,
-            title: 'Verification Queue',
-            subtitle: 'Approve talent & recruiter badges',
+            title: AppStrings.verificationQueue,
+            subtitle: AppStrings.verificationQueueSubtitle,
             onTap: () => context.push(RouteNames.adminVerification),
           ),
           const SizedBox(height: AppSpacing.sm),
           _ToolCard(
             icon: Iconsax.briefcase,
-            title: 'Casting Oversight',
-            subtitle: 'Audit and moderate live castings',
+            title: AppStrings.castingOversight,
+            subtitle: AppStrings.castingOversightSubtitle,
             onTap: () => embedded
                 ? context.go(RouteNames.castings)
                 : context.push(RouteNames.adminCastings),

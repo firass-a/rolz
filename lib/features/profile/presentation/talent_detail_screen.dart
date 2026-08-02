@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -37,12 +39,12 @@ class _TalentDetailScreenState extends ConsumerState<TalentDetailScreen> {
     if (talent == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: const CustomAppBar(title: 'Talent Profile'),
-        body: const Center(
+        appBar: CustomAppBar(title: AppStrings.talentProfile),
+        body: Center(
           child: ErrorState(
             icon: Iconsax.profile_remove,
-            title: 'Talent Not Found',
-            subtitle: 'This profile may have been removed or archived.',
+            title: AppStrings.talentNotFound,
+            subtitle: AppStrings.talentNotFoundSubtitle,
           ),
         ),
       );
@@ -85,11 +87,11 @@ class _TalentDetailScreenState extends ConsumerState<TalentDetailScreen> {
 
   Future<void> _contact(UserModel? currentUser, TalentModel talent) async {
     if (currentUser == null) {
-      context.showSnack('Sign in to start a conversation.', isError: true);
+      context.showSnack(AppStrings.signInToMessage, isError: true);
       return;
     }
     if (currentUser.id == talent.userId) {
-      context.showSnack("That's your own profile.");
+      context.showSnack(AppStrings.ownProfileSnack);
       return;
     }
     setState(() => _contacting = true);
@@ -103,22 +105,22 @@ class _TalentDetailScreenState extends ConsumerState<TalentDetailScreen> {
 
   void _toggleFavorite(String? userId, TalentModel talent) {
     if (userId == null) {
-      context.showSnack('Sign in to save favorites.', isError: true);
+      context.showSnack(AppStrings.signInToFavorites, isError: true);
       return;
     }
     final favorited = ref
         .read(favoriteRepositoryProvider)
         .toggleFavorite(userId, talent.id, FavoriteItemType.talent);
-    context.showSnack(favorited ? 'Added to favorites.' : 'Removed from favorites.');
+    context.showSnack(favorited ? AppStrings.addedToFavorites : AppStrings.removedFromFavorites);
   }
 
   void _share(TalentModel talent) {
-    context.showSnack('Share link for ${talent.fullName} copied to clipboard.');
+    context.showSnack(AppStrings.shareLinkCopied(talent.fullName));
   }
 
   Future<void> _report(String? userId, TalentModel talent) async {
     if (userId == null) {
-      context.showSnack('Sign in to report a profile.', isError: true);
+      context.showSnack(AppStrings.signInToReport, isError: true);
       return;
     }
     final reason = await showKrBottomSheet<String>(
@@ -133,7 +135,7 @@ class _TalentDetailScreenState extends ConsumerState<TalentDetailScreen> {
           reason: reason.trim(),
         );
     if (!mounted) return;
-    context.showSnack('Report submitted. Our team will review it shortly.');
+    context.showSnack(AppStrings.reportSubmitted);
   }
 }
 
@@ -165,7 +167,7 @@ class _CoverHeader extends StatelessWidget {
       backgroundColor: AppColors.background,
       surfaceTintColor: Colors.transparent,
       leading: Padding(
-        padding: const EdgeInsets.only(left: AppSpacing.lg),
+        padding: const EdgeInsetsDirectional.only(start: AppSpacing.lg),
         child: Center(child: _GlassIconButton(icon: Iconsax.arrow_left_2, onTap: () => Navigator.of(context).maybePop())),
       ),
       leadingWidth: 56,
@@ -191,6 +193,18 @@ class _CoverHeader extends StatelessWidget {
               errorIcon: Iconsax.profile_circle,
             ),
             const DecoratedBox(decoration: BoxDecoration(gradient: AppColors.gradientHero)),
+            PositionedDirectional(
+              start: AppSpacing.lg,
+              bottom: AppSpacing.lg,
+              child: KrAvatar(
+                imageUrl: talent.headshotUrl,
+                initials: talent.initials,
+                size: KrAvatarSize.xl,
+                verified: talent.isVerified,
+                borderColor: AppColors.background,
+                heroTag: 'talent-${talent.id}',
+              ),
+            ),
           ],
         ),
       ),
@@ -248,156 +262,142 @@ class _ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxxl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.xxxl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Transform.translate(
-            offset: const Offset(0, -44),
-            child: KrAvatar(
-              imageUrl: talent.headshotUrl,
-              initials: talent.initials,
-              size: KrAvatarSize.xl,
-              verified: talent.isVerified,
-              borderColor: AppColors.background,
-              heroTag: 'talent-${talent.id}',
-            ),
-          ).animate().fadeIn(duration: 350.ms).scale(begin: const Offset(0.85, 0.85), end: const Offset(1, 1)),
-          Transform.translate(
-            offset: const Offset(0, -28),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(talent.fullName, style: AppTextStyles.sectionTitle),
+              ),
+              if (isOwner)
+                PremiumButton.secondary(label: AppStrings.edit, icon: Iconsax.edit_2, size: PremiumButtonSize.small, onPressed: onEdit),
+            ],
+          ).animate().fadeIn(duration: 350.ms),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: AppSpacing.md,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              _MetaItem(icon: Iconsax.user_tag, label: talent.category.label),
+              _MetaItem(icon: Iconsax.location, label: talent.locationLabel),
+            ],
+          ).animate().fadeIn(delay: 60.ms, duration: 350.ms),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              const Icon(Iconsax.star_1, size: 16, color: AppColors.gold),
+              const SizedBox(width: 4),
+              Text(
+                '${Formatters.formatRating(talent.rating)} · ${AppStrings.reviewsCount(talent.reviewCount)}',
+                style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              _AvailabilityBadge(status: talent.availability),
+            ],
+          ).animate().fadeIn(delay: 100.ms, duration: 350.ms),
+          const SizedBox(height: AppSpacing.lg),
+          if (!isOwner)
+            Row(
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(talent.fullName, style: AppTextStyles.sectionTitle),
-                    ),
-                    if (isOwner)
-                      PremiumButton.secondary(label: 'Edit', icon: Iconsax.edit_2, size: PremiumButtonSize.small, onPressed: onEdit),
-                  ],
-                ).animate().fadeIn(delay: 60.ms, duration: 350.ms),
-                const SizedBox(height: 6),
-                Wrap(
-                  spacing: AppSpacing.md,
-                  runSpacing: 4,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    _MetaItem(icon: Iconsax.user_tag, label: talent.category.label),
-                    _MetaItem(icon: Iconsax.location, label: talent.locationLabel),
-                  ],
-                ).animate().fadeIn(delay: 100.ms, duration: 350.ms),
-                const SizedBox(height: AppSpacing.sm),
-                Row(
-                  children: [
-                    const Icon(Iconsax.star_1, size: 16, color: AppColors.gold),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${Formatters.formatRating(talent.rating)} · ${talent.reviewCount} review${talent.reviewCount == 1 ? '' : 's'}',
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
-                    ),
-                    const SizedBox(width: AppSpacing.md),
-                    _AvailabilityBadge(status: talent.availability),
-                  ],
-                ).animate().fadeIn(delay: 140.ms, duration: 350.ms),
-                const SizedBox(height: AppSpacing.lg),
-                if (!isOwner)
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: PremiumButton.primary(
-                          label: 'Contact',
-                          icon: Iconsax.message,
-                          isLoading: contacting,
-                          onPressed: onContact,
-                        ),
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 180.ms, duration: 350.ms),
-                const SizedBox(height: AppSpacing.xl),
-                _Section(title: 'About', child: Text(talent.biography.orPlaceholder('This talent hasn\'t written a bio yet.'), style: AppTextStyles.bodyMuted)),
-                _Section(
-                  title: 'Skills',
-                  child: talent.skills.isEmpty
-                      ? const _EmptyLine('No skills listed yet.')
-                      : _ChipWrap(items: talent.skills),
-                ),
-                _Section(
-                  title: 'Languages',
-                  child: talent.languages.isEmpty
-                      ? const _EmptyLine('No languages listed yet.')
-                      : _ChipWrap(items: talent.languages, icon: Iconsax.language_square),
-                ),
-                _Section(
-                  title: 'Physical',
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 3,
-                    mainAxisSpacing: AppSpacing.sm,
-                    crossAxisSpacing: AppSpacing.sm,
-                    childAspectRatio: 1.35,
-                    children: [
-                      KrStatCard(icon: Iconsax.cake, value: '${talent.age}', label: 'Age', compact: true),
-                      KrStatCard(icon: Iconsax.ruler, value: Formatters.formatHeight(talent.heightCm), label: 'Height', animateCounter: false, compact: true),
-                      KrStatCard(icon: Iconsax.weight, value: '${talent.weightKg.toStringAsFixed(0)} kg', label: 'Weight', animateCounter: false, compact: true),
-                      KrStatCard(icon: Iconsax.eye, value: talent.eyeColor.orPlaceholder('—'), label: 'Eyes', animateCounter: false, compact: true),
-                      KrStatCard(icon: Iconsax.scissor, value: talent.hairColor.orPlaceholder('—'), label: 'Hair', animateCounter: false, compact: true),
-                      KrStatCard(icon: Iconsax.medal_star, value: talent.experienceLevel.label, label: 'Level', animateCounter: false, compact: true),
-                    ],
+                Expanded(
+                  flex: 3,
+                  child: PremiumButton.primary(
+                    label: AppStrings.contact,
+                    icon: Iconsax.message,
+                    isLoading: contacting,
+                    onPressed: onContact,
                   ),
                 ),
-                _Section(
-                  title: 'Experience',
-                  child: talent.experience.isEmpty
-                      ? const _EmptyLine('No experience credits added yet.')
-                      : Column(
-                          children: talent.experience
-                              .map<Widget>((e) => _ExperienceRow(entry: e))
-                              .toList()
-                              .separatedBy(const SizedBox(height: AppSpacing.sm)),
-                        ),
-                ),
-                _Section(
-                  title: 'Education',
-                  child: Text(talent.education.orPlaceholder('Not specified.'), style: AppTextStyles.bodyMuted),
-                ),
-                _Section(
-                  title: 'Portfolio',
-                  child: talent.galleryUrls.isEmpty && talent.portfolioUrls.isEmpty
-                      ? const _EmptyLine('No portfolio images yet.')
-                      : _PortfolioGrid(urls: [...talent.portfolioUrls, ...talent.galleryUrls]),
-                ),
-                if (talent.videoThumbnails.isNotEmpty)
-                  _Section(title: 'Videos', child: _VideoRow(thumbnails: talent.videoThumbnails)),
-                _Section(
-                  title: 'Reviews',
-                  child: reviews.isEmpty
-                      ? const _EmptyLine('No reviews yet.')
-                      : Column(
-                          children: reviews
-                              .take(6)
-                              .map<Widget>((r) => _ReviewCard(review: r))
-                              .toList()
-                              .separatedBy(const SizedBox(height: AppSpacing.sm)),
-                        ),
-                ),
-                if (talent.socialLinks.isNotEmpty)
-                  _Section(
-                    title: 'Social',
-                    child: Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: AppSpacing.sm,
-                      children: talent.socialLinks.entries
-                          .map((e) => _SocialChip(platform: e.key, handle: e.value))
-                          .toList(),
-                    ),
-                  ),
+              ],
+            ).animate().fadeIn(delay: 140.ms, duration: 350.ms),
+          const SizedBox(height: AppSpacing.xl),
+          _Section(title: AppStrings.about, child: Text(talent.biography.orPlaceholder(AppStrings.noBioYet), style: AppTextStyles.bodyMuted)),
+          _Section(
+            title: AppStrings.skills,
+            child: talent.skills.isEmpty
+                ? _EmptyLine(AppStrings.noSkillsListed)
+                : _ChipWrap(items: talent.skills),
+          ),
+          _Section(
+            title: AppStrings.languages,
+            child: talent.languages.isEmpty
+                ? _EmptyLine(AppStrings.noLanguagesListed)
+                : _ChipWrap(items: talent.languages, icon: Iconsax.language_square),
+          ),
+          _Section(
+            title: AppStrings.physical,
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 3,
+              mainAxisSpacing: AppSpacing.sm,
+              crossAxisSpacing: AppSpacing.sm,
+              childAspectRatio: 1.15,
+              children: [
+                KrStatCard(icon: Iconsax.cake, value: '${talent.age}', label: AppStrings.age, compact: true),
+                KrStatCard(icon: Iconsax.ruler, value: Formatters.formatHeight(talent.heightCm), label: AppStrings.height, animateCounter: false, compact: true),
+                KrStatCard(icon: Iconsax.weight, value: AppStrings.weightKgValue(talent.weightKg), label: AppStrings.weight, animateCounter: false, compact: true),
+                KrStatCard(icon: Iconsax.eye, value: DisplayLocalizer.t(talent.eyeColor).orPlaceholder('—'), label: AppStrings.eyes, animateCounter: false, compact: true),
+                KrStatCard(icon: Iconsax.scissor, value: DisplayLocalizer.t(talent.hairColor).orPlaceholder('—'), label: AppStrings.hair, animateCounter: false, compact: true),
+                KrStatCard(icon: Iconsax.medal_star, value: talent.experienceLevel.label, label: AppStrings.level, animateCounter: false, compact: true),
               ],
             ),
           ),
+          _Section(
+            title: AppStrings.experience,
+            child: talent.experience.isEmpty
+                ? _EmptyLine(AppStrings.noExperienceCredits)
+                : Column(
+                    children: talent.experience
+                        .map<Widget>((e) => _ExperienceRow(entry: e))
+                        .toList()
+                        .separatedBy(const SizedBox(height: AppSpacing.sm)),
+                  ),
+          ),
+          _Section(
+            title: AppStrings.education,
+            child: Text(
+              talent.education.isEmpty
+                  ? AppStrings.notSpecified
+                  : DisplayLocalizer.t(talent.education),
+              style: AppTextStyles.bodyMuted,
+            ),
+          ),
+          _Section(
+            title: AppStrings.portfolio,
+            child: talent.galleryUrls.isEmpty && talent.portfolioUrls.isEmpty
+                ? _EmptyLine(AppStrings.noPortfolioImages)
+                : _PortfolioGrid(urls: [...talent.portfolioUrls, ...talent.galleryUrls]),
+          ),
+          if (talent.videoThumbnails.isNotEmpty)
+            _Section(title: AppStrings.videos, child: _VideoRow(thumbnails: talent.videoThumbnails)),
+          _Section(
+            title: AppStrings.reviews,
+            child: reviews.isEmpty
+                ? _EmptyLine(AppStrings.noReviewsYet)
+                : Column(
+                    children: reviews
+                        .take(6)
+                        .map<Widget>((r) => _ReviewCard(review: r))
+                        .toList()
+                        .separatedBy(const SizedBox(height: AppSpacing.sm)),
+                  ),
+          ),
+          if (talent.socialLinks.isNotEmpty)
+            _Section(
+              title: AppStrings.social,
+              child: Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
+                children: talent.socialLinks.entries
+                    .map((e) => _SocialChip(platform: e.key, handle: e.value))
+                    .toList(),
+              ),
+            ),
         ],
       ),
     );
@@ -493,7 +493,7 @@ class _ChipWrap extends StatelessWidget {
                       Icon(icon, size: 13, color: AppColors.gold),
                       const SizedBox(width: 6),
                     ],
-                    Text(item, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary)),
+                    Text(DisplayLocalizer.t(item), style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary)),
                   ],
                 ),
               ))
@@ -526,12 +526,12 @@ class _ExperienceRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(entry.title, style: AppTextStyles.cardTitle.copyWith(fontSize: 15)),
+                Text(DisplayLocalizer.t(entry.title), style: AppTextStyles.cardTitle.copyWith(fontSize: 15)),
                 const SizedBox(height: 2),
-                Text(entry.role, style: AppTextStyles.bodySmall.copyWith(color: AppColors.gold)),
+                Text(DisplayLocalizer.t(entry.role), style: AppTextStyles.bodySmall.copyWith(color: AppColors.gold)),
                 if (entry.description != null && entry.description!.isNotEmpty) ...[
                   const SizedBox(height: 4),
-                  Text(entry.description!, style: AppTextStyles.bodySmall),
+                  Text(DisplayLocalizer.t(entry.description!), style: AppTextStyles.bodySmall),
                 ],
               ],
             ),
@@ -623,7 +623,7 @@ class _ReviewCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(review.reviewerName.orPlaceholder('KAST-ROLZ User'), style: AppTextStyles.cardTitle.copyWith(fontSize: 14)),
+                child: Text(review.reviewerName.orPlaceholder(AppStrings.kastRolzUser), style: AppTextStyles.cardTitle.copyWith(fontSize: 14)),
               ),
               Row(
                 children: List.generate(5, (i) {
@@ -669,7 +669,7 @@ class _SocialChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.showSnack('Opening $platform…'),
+      onTap: () => context.showSnack(AppStrings.openingPlatform(platform)),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
         decoration: BoxDecoration(
@@ -719,24 +719,24 @@ class _ReportSheetState extends State<_ReportSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Report ${widget.subjectLabel}', style: AppTextStyles.sectionTitle.copyWith(fontSize: 21)),
+          Text(AppStrings.reportSubject(widget.subjectLabel), style: AppTextStyles.sectionTitle.copyWith(fontSize: 21)),
           const SizedBox(height: AppSpacing.sm),
-          Text('Tell us what\'s wrong. Our moderation team reviews every report.', style: AppTextStyles.bodyMuted),
+          Text(AppStrings.reportBodyHint, style: AppTextStyles.bodyMuted),
           const SizedBox(height: AppSpacing.lg),
           TextField(
             controller: _controller,
             maxLines: 4,
             style: AppTextStyles.input,
-            decoration: const InputDecoration(hintText: 'Describe the issue…'),
+            decoration: InputDecoration(hintText: AppStrings.describeIssue),
           ),
           const SizedBox(height: AppSpacing.lg),
           PremiumButton.danger(
-            label: 'Submit Report',
+            label: AppStrings.submitReport,
             fullWidth: true,
             onPressed: () => Navigator.of(context).pop(_controller.text),
           ),
           const SizedBox(height: AppSpacing.sm),
-          PremiumButton.ghost(label: 'Cancel', fullWidth: true, onPressed: () => Navigator.of(context).pop()),
+          PremiumButton.ghost(label: AppStrings.cancel, fullWidth: true, onPressed: () => Navigator.of(context).pop()),
         ],
       ),
     );

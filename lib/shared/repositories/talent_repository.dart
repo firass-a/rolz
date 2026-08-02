@@ -51,13 +51,18 @@ List<TalentModel> applyTalentFilters(List<TalentModel> talents, TalentFilters fi
     results = results.where((t) => t.weightKg <= filters.weightMax!).toList();
   }
   if (filters.languages.isNotEmpty) {
-    results = results.where((t) => filters.languages.every(t.languages.contains)).toList();
+    results = results.where((t) {
+      final talentLangs = t.languages.map((l) => l.toLowerCase()).toSet();
+      return filters.languages.every((l) => talentLangs.contains(l.toLowerCase()));
+    }).toList();
   }
   if (filters.nationality != null && filters.nationality!.isNotEmpty) {
-    results = results.where((t) => t.nationality == filters.nationality).toList();
+    final nationality = filters.nationality!.toLowerCase();
+    results = results.where((t) => t.nationality.toLowerCase().contains(nationality)).toList();
   }
   if (filters.city != null && filters.city!.isNotEmpty) {
-    results = results.where((t) => t.city == filters.city).toList();
+    final city = filters.city!.toLowerCase();
+    results = results.where((t) => t.city.toLowerCase().contains(city)).toList();
   }
   if (filters.country != null && filters.country!.isNotEmpty) {
     results = results.where((t) => t.country == filters.country).toList();
@@ -65,8 +70,14 @@ List<TalentModel> applyTalentFilters(List<TalentModel> talents, TalentFilters fi
   if (filters.experienceLevel != null) {
     results = results.where((t) => t.experienceLevel == filters.experienceLevel).toList();
   }
+  if (filters.experienceMinYears != null) {
+    results = results.where((t) => t.yearsOfExperience >= filters.experienceMinYears!).toList();
+  }
   if (filters.skills.isNotEmpty) {
-    results = results.where((t) => filters.skills.every(t.skills.contains)).toList();
+    results = results.where((t) {
+      final talentSkills = t.skills.map((s) => s.toLowerCase()).toSet();
+      return filters.skills.every((s) => talentSkills.contains(s.toLowerCase()));
+    }).toList();
   }
   if (filters.availability != null) {
     results = results.where((t) => t.availability == filters.availability).toList();

@@ -65,18 +65,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: AppSpacing.xxl),
+                const KrLogo(size: 72)
+                    .animate()
+                    .fadeIn(duration: 400.ms)
+                    .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1)),
+                const SizedBox(height: AppSpacing.lg),
                 Text(
                   AppStrings.appName,
                   style: AppTextStyles.goldLabel.copyWith(fontSize: 13, letterSpacing: 3),
                 ).animate().fadeIn(duration: 400.ms),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Welcome Back',
+                  AppStrings.welcomeBack,
                   style: AppTextStyles.heroTitleCompact,
                 ).animate().fadeIn(delay: 80.ms, duration: 450.ms).slideY(begin: 0.1, end: 0),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Sign in to continue your casting journey.',
+                  AppStrings.signInContinue,
                   style: AppTextStyles.bodyMuted,
                 ).animate().fadeIn(delay: 140.ms, duration: 450.ms),
                 const SizedBox(height: AppSpacing.xxl),
@@ -92,8 +97,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       prefixIcon: Icon(Iconsax.sms),
                     ),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) return 'Enter your email';
-                      if (!value.trim().isValidEmail) return 'Enter a valid email';
+                      if (value == null || value.trim().isEmpty) return AppStrings.enterEmail;
+                      if (!value.trim().isValidEmail) return AppStrings.enterValidEmail;
                       return null;
                     },
                   ),
@@ -116,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Enter your password';
+                      if (value == null || value.isEmpty) return AppStrings.enterPassword;
                       return null;
                     },
                   ),
@@ -141,7 +146,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const Expanded(child: Divider()),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      child: Text('or try a demo account', style: AppTextStyles.caption),
+                      child: Text(AppStrings.orTryDemo, style: AppTextStyles.caption),
                     ),
                     const Expanded(child: Divider()),
                   ],
@@ -152,7 +157,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Expanded(
                       child: _DemoChip(
                         icon: Iconsax.user,
-                        label: 'Talent',
+                        label: AppStrings.demoTalent,
                         onTap: auth.isLoading ? null : () => ref.read(authProvider.notifier).loginAsTalent(),
                       ),
                     ),
@@ -160,7 +165,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Expanded(
                       child: _DemoChip(
                         icon: Iconsax.briefcase,
-                        label: 'Recruiter',
+                        label: AppStrings.demoRecruiter,
                         onTap: auth.isLoading ? null : () => ref.read(authProvider.notifier).loginAsRecruiter(),
                       ),
                     ),
@@ -168,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Expanded(
                       child: _DemoChip(
                         icon: Iconsax.shield_tick,
-                        label: 'Admin',
+                        label: AppStrings.demoAdmin,
                         onTap: auth.isLoading ? null : () => ref.read(authProvider.notifier).loginAsAdmin(),
                       ),
                     ),

@@ -59,18 +59,18 @@ class NotificationsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: 'Notifications',
+        title: AppStrings.notifications,
         actions: user == null
             ? null
             : [
                 TextButton(
                   onPressed: () => ref.read(notificationProvider.notifier).markAllRead(user.id),
-                  child: Text('Mark all read', style: AppTextStyles.buttonSmall.copyWith(color: AppColors.gold)),
+                  child: Text(AppStrings.markAllRead, style: AppTextStyles.buttonSmall.copyWith(color: AppColors.gold)),
                 ),
               ],
       ),
       body: user == null
-          ? const Center(
+          ? Center(
               child: EmptyState(
                 icon: Iconsax.notification,
                 title: AppStrings.emptyNotificationsTitle,
@@ -92,7 +92,7 @@ class _NotificationList extends ConsumerWidget {
     final notifications = ref.watch(notificationsForUserProvider(userId));
 
     if (notifications.isEmpty) {
-      return const Center(
+      return Center(
         child: EmptyState(
           icon: Iconsax.notification,
           title: AppStrings.emptyNotificationsTitle,

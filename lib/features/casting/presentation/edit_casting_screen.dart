@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/utils/formatters.dart';
@@ -107,7 +108,7 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
 
     if (!mounted) return;
     setState(() => _submitting = false);
-    context.showSnack('Casting updated successfully!');
+    context.showSnack(AppStrings.castingUpdated);
     context.pop();
   }
 
@@ -118,12 +119,12 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
     if (casting == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: const CustomAppBar(title: 'Edit Casting'),
-        body: const Center(
+        appBar: CustomAppBar(title: AppStrings.editCasting),
+        body: Center(
           child: ErrorState(
             icon: Iconsax.briefcase,
-            title: 'Casting Not Found',
-            subtitle: 'This casting may have been removed.',
+            title: AppStrings.castingNotFound,
+            subtitle: AppStrings.castingNotFoundSubtitle,
           ),
         ),
       );
@@ -133,12 +134,12 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
     if (recruiter == null || recruiter.id != casting.recruiterId) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: const CustomAppBar(title: 'Edit Casting'),
-        body: const Center(
+        appBar: CustomAppBar(title: AppStrings.editCasting),
+        body: Center(
           child: ErrorState(
             icon: Iconsax.lock,
-            title: 'Not Authorized',
-            subtitle: 'You can only edit castings you\'ve posted yourself.',
+            title: AppStrings.notAuthorized,
+            subtitle: AppStrings.notAuthorizedEditCasting,
           ),
         ),
       );
@@ -148,7 +149,7 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Edit Casting'),
+      appBar: CustomAppBar(title: AppStrings.editCasting),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.xxl),
@@ -158,19 +159,19 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Update the details below — changes go live immediately.',
+                  AppStrings.editCastingSubtitle,
                   style: AppTextStyles.bodyMuted,
                 ).animate().fadeIn(duration: 300.ms),
                 const SizedBox(height: AppSpacing.xl),
-                _Field(label: 'Casting Title', controller: _titleController, hint: 'e.g. Lead Actress — Feature Film'),
+                _Field(label: AppStrings.castingTitle, controller: _titleController, hint: AppStrings.castingTitleHint),
                 const SizedBox(height: AppSpacing.lg),
-                _Field(label: 'Role', controller: _roleController, hint: 'e.g. Lead role, supporting role…'),
+                _Field(label: AppStrings.castingRole, controller: _roleController, hint: AppStrings.roleHint),
                 const SizedBox(height: AppSpacing.lg),
                 Row(
                   children: [
                     Expanded(
                       child: _Dropdown<TalentCategory>(
-                        label: 'Category',
+                        label: AppStrings.category,
                         value: _category,
                         items: TalentCategory.values,
                         labelOf: (c) => c.label,
@@ -180,7 +181,7 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: _Dropdown<CastingType>(
-                        label: 'Type',
+                        label: AppStrings.type,
                         value: _type,
                         items: CastingType.values,
                         labelOf: (c) => c.label,
@@ -191,7 +192,7 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _Dropdown<CastingStatus>(
-                  label: 'Status',
+                  label: AppStrings.status,
                   value: _status,
                   items: CastingStatus.values.where((s) => s != CastingStatus.archived).toList(),
                   labelOf: (s) => s.label,
@@ -201,12 +202,12 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: _Field(label: 'City', controller: _cityController, hint: 'Algiers'),
+                      child: _Field(label: AppStrings.city, controller: _cityController, hint: AppStrings.cityHint),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: _Field(
-                        label: 'Salary (optional)',
+                        label: AppStrings.salaryOptional,
                         controller: _salaryController,
                         hint: '80000',
                         keyboardType: TextInputType.number,
@@ -216,7 +217,7 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                Text('Application Deadline', style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
+                Text(AppStrings.applicationDeadline, style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
                 const SizedBox(height: 6),
                 GestureDetector(
                   onTap: _pickDeadline,
@@ -240,14 +241,14 @@ class _EditCastingScreenState extends ConsumerState<EditCastingScreen> {
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _Field(
-                  label: 'Description',
+                  label: AppStrings.description,
                   controller: _descriptionController,
-                  hint: 'Describe the role, requirements and shoot details…',
+                  hint: AppStrings.castingDescriptionHint,
                   maxLines: 5,
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 PremiumButton.primary(
-                  label: 'Save Changes',
+                  label: AppStrings.saveChanges,
                   fullWidth: true,
                   isLoading: _submitting,
                   icon: Iconsax.tick_circle,
@@ -292,7 +293,7 @@ class _Field extends StatelessWidget {
           keyboardType: keyboardType,
           style: AppTextStyles.input,
           decoration: InputDecoration(hintText: hint),
-          validator: required ? (v) => (v == null || v.trim().isEmpty) ? 'Required' : null : null,
+          validator: required ? (v) => (v == null || v.trim().isEmpty) ? AppStrings.required : null : null,
         ),
       ],
     );

@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -45,12 +47,20 @@ class _AdminCastingsScreenState extends ConsumerState<AdminCastingsScreen> {
 
     if (_query.trim().isNotEmpty) {
       final q = _query.trim().toLowerCase();
-      castings = castings
-          .where((c) =>
-              c.title.toLowerCase().contains(q) ||
-              c.role.toLowerCase().contains(q) ||
-              c.city.toLowerCase().contains(q))
-          .toList();
+      castings = castings.where((c) {
+        final haystacks = [
+          c.title,
+          c.role,
+          c.city,
+          c.country,
+          c.locationLabel,
+          DisplayLocalizer.t(c.title),
+          DisplayLocalizer.t(c.role),
+          DisplayLocalizer.t(c.city),
+          DisplayLocalizer.t(c.country),
+        ];
+        return haystacks.any((s) => s.toLowerCase().contains(q));
+      }).toList();
     }
     if (_statusFilter != _kAllStatus) {
       castings = castings.where((c) => c.status.name == _statusFilter).toList();
@@ -59,33 +69,36 @@ class _AdminCastingsScreenState extends ConsumerState<AdminCastingsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(title: 'Casting Oversight', showBackButton: !widget.embedded),
+      appBar: CustomAppBar(title: AppStrings.castingOversight, showBackButton: !widget.embedded),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
             child: KrSearchBar(
               controller: _searchController,
-              hintText: 'Search castings by title, role or city…',
+              hintText: AppStrings.searchCastingsAdmin,
               onChanged: (v) => setState(() => _query = v),
             ),
           ),
-          FilterChipBar(
-            selectedValue: _statusFilter,
-            onSelected: (v) => setState(() => _statusFilter = v ?? _kAllStatus),
-            items: [
-              const FilterChipItem(value: _kAllStatus, label: 'All'),
-              ...CastingStatus.values.map((s) => FilterChipItem(value: s.name, label: s.label)),
-            ],
+          SizedBox(
+            height: 44,
+            child: FilterChipBar(
+              selectedValue: _statusFilter,
+              onSelected: (v) => setState(() => _statusFilter = v ?? _kAllStatus),
+              items: [
+                FilterChipItem(value: _kAllStatus, label: AppStrings.all),
+                ...CastingStatus.values.map((s) => FilterChipItem(value: s.name, label: s.label)),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: castings.isEmpty
-                ? const Center(
+                ? Center(
                     child: EmptyState(
                       icon: Iconsax.briefcase,
-                      title: 'No Castings Found',
-                      subtitle: 'Try a different search term or filter.',
+                      title: AppStrings.noCastingsFound,
+                      subtitle: AppStrings.noCastingsFoundSubtitle,
                       compact: true,
                     ),
                   )
@@ -119,7 +132,7 @@ class _CastingRow extends ConsumerWidget {
       case CastingStatus.closed:
         return StatusBadge.error(status.label);
       case CastingStatus.filled:
-        return const StatusBadge(label: 'Filled', kind: KrStatusKind.info);
+        return StatusBadge(label: AppStrings.statusFilled, kind: KrStatusKind.info);
       case CastingStatus.draft:
         return StatusBadge(label: status.label, kind: KrStatusKind.neutral);
       case CastingStatus.archived:
@@ -135,39 +148,39 @@ class _CastingRow extends ConsumerWidget {
         break;
       case 'feature':
         notifier.toggleFeatured(casting.id);
-        context.showSnack(casting.isFeatured ? 'Removed from featured.' : 'Casting is now featured.');
+        context.showSnack(casting.isFeatured ? AppStrings.removedFromFeatured : AppStrings.castingNowFeatured);
         break;
       case 'close':
         notifier.updateStatus(casting.id, CastingStatus.closed);
-        context.showSnack('Casting closed.');
+        context.showSnack(AppStrings.castingClosedSnack);
         break;
       case 'archive':
         final archiving = !casting.isArchived;
         if (archiving) {
           final confirmed = await ConfirmationSheet.show(
             context,
-            title: 'Archive this casting?',
-            body: 'It will be hidden from discovery and marked archived.',
+            title: AppStrings.archiveThisCasting,
+            body: AppStrings.archiveCastingBody,
             icon: Iconsax.archive_1,
-            confirmLabel: 'Archive',
+            confirmLabel: AppStrings.archive,
           );
           if (!confirmed) return;
           notifier.archive(casting.id);
-          if (context.mounted) context.showSnack('Casting archived.');
+          if (context.mounted) context.showSnack(AppStrings.castingArchived);
         } else {
           notifier.restore(casting.id);
-          if (context.mounted) context.showSnack('Casting restored.');
+          if (context.mounted) context.showSnack(AppStrings.castingRestored);
         }
         break;
       case 'delete':
         final confirmed = await ConfirmationSheet.show(
           context,
-          title: 'Delete this casting?',
-          body: 'This permanently removes the listing and cannot be undone.',
+          title: AppStrings.deleteThisCasting,
+          body: AppStrings.deleteCastingBody,
         );
         if (!confirmed) return;
         notifier.delete(casting.id);
-        if (context.mounted) context.showSnack('Casting deleted.', isError: true);
+        if (context.mounted) context.showSnack(AppStrings.castingDeleted, isError: true);
         break;
     }
   }
@@ -193,14 +206,14 @@ class _CastingRow extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  casting.title,
+                  DisplayLocalizer.t(casting.title),
                   style: AppTextStyles.cardTitle.copyWith(fontSize: 15),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  recruiter?.companyName ?? 'Unknown recruiter',
+                  recruiter?.companyName ?? AppStrings.unknownRecruiter,
                   style: AppTextStyles.bodySmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -211,15 +224,15 @@ class _CastingRow extends ConsumerWidget {
                   runSpacing: 6,
                   children: [
                     _statusBadge(casting.status),
-                    if (casting.isFeatured) const StatusBadge.gold('Featured', showDot: false),
-                    if (casting.isUrgent) const StatusBadge.error('Urgent', showDot: false),
+                    if (casting.isFeatured) StatusBadge.gold(AppStrings.featured, showDot: false),
+                    if (casting.isUrgent) StatusBadge.error(AppStrings.castingUrgent, showDot: false),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '${casting.locationLabel} · ${Formatters.formatSalary(casting.salary, currency: casting.currency)} · ${casting.applicantCount} applicants',
+                  '${casting.locationLabel} · ${Formatters.formatSalary(casting.salary, currency: casting.currency)} · ${AppStrings.applicantsLabel(casting.applicantCount)}',
                   style: AppTextStyles.caption,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -228,26 +241,26 @@ class _CastingRow extends ConsumerWidget {
           PopupMenuButton<String>(
             onSelected: (action) => _handleAction(context, ref, action),
             itemBuilder: (context) => [
-              const PopupMenuItem(value: 'view', child: _Row(icon: Iconsax.eye, label: 'View')),
+              PopupMenuItem(value: 'view', child: _Row(icon: Iconsax.eye, label: AppStrings.view)),
               PopupMenuItem(
                 value: 'feature',
                 child: _Row(
                   icon: Iconsax.crown_1,
-                  label: casting.isFeatured ? 'Unfeature' : 'Feature',
+                  label: casting.isFeatured ? AppStrings.unfeature : AppStrings.feature,
                 ),
               ),
               if (casting.status == CastingStatus.open)
-                const PopupMenuItem(value: 'close', child: _Row(icon: Iconsax.lock, label: 'Close')),
+                PopupMenuItem(value: 'close', child: _Row(icon: Iconsax.lock, label: AppStrings.close)),
               PopupMenuItem(
                 value: 'archive',
                 child: _Row(
                   icon: casting.isArchived ? Iconsax.archive_add : Iconsax.archive_1,
-                  label: casting.isArchived ? 'Restore' : 'Archive',
+                  label: casting.isArchived ? AppStrings.restore : AppStrings.archive,
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'delete',
-                child: _Row(icon: Iconsax.trash, label: 'Delete', color: AppColors.error),
+                child: _Row(icon: Iconsax.trash, label: AppStrings.delete, color: AppColors.error),
               ),
             ],
           ),

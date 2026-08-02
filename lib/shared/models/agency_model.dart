@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 
+import '../../core/l10n/display_localizer.dart';
+import '../../core/l10n/locale_controller.dart';
+
 /// A talent agency that represents (and can be linked to) multiple talents.
 class AgencyModel extends Equatable {
   final String id;
@@ -32,7 +35,10 @@ class AgencyModel extends Equatable {
     required this.createdAt,
   });
 
-  String get locationLabel => '$city, $country';
+  String get locationLabel {
+    final sep = LocaleController.isArabic ? '، ' : ', ';
+    return '${DisplayLocalizer.t(city)}$sep${DisplayLocalizer.t(country)}';
+  }
 
   AgencyModel copyWith({
     String? id,

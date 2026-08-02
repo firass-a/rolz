@@ -8,6 +8,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/widgets.dart';
@@ -39,15 +40,19 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> with SingleTi
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: 'Favorites',
+        title: AppStrings.favorites,
         showBackButton: false,
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [Tab(text: 'Talents'), Tab(text: 'Castings'), Tab(text: 'Agencies')],
+          tabs: [
+            Tab(text: AppStrings.talents),
+            Tab(text: AppStrings.castings),
+            Tab(text: AppStrings.agencies),
+          ],
         ),
       ),
       body: userId == null
-          ? const Center(
+          ? Center(
               child: EmptyState(
                 icon: Iconsax.heart,
                 title: AppStrings.emptyFavoritesTitle,
@@ -77,7 +82,7 @@ class _TalentFavorites extends ConsumerWidget {
     final items = favorites.map((f) => talents.where((t) => t.id == f.itemId).firstOrNull).whereType<TalentModel>().toList();
 
     if (items.isEmpty) {
-      return const Center(child: EmptyState(icon: Iconsax.heart, title: AppStrings.emptyFavoritesTitle, subtitle: AppStrings.emptyFavoritesSubtitle, compact: true));
+      return Center(child: EmptyState(icon: Iconsax.heart, title: AppStrings.emptyFavoritesTitle, subtitle: AppStrings.emptyFavoritesSubtitle, compact: true));
     }
 
     return GridView.builder(
@@ -95,7 +100,7 @@ class _TalentFavorites extends ConsumerWidget {
           name: talent.fullName,
           imageUrl: talent.headshotUrl,
           category: talent.category.label,
-          city: talent.city,
+          city: DisplayLocalizer.t(talent.city),
           verified: talent.isVerified,
           rating: talent.rating,
           isFavorite: true,
@@ -121,7 +126,7 @@ class _CastingFavorites extends ConsumerWidget {
     final items = favorites.map((f) => castings.where((c) => c.id == f.itemId).firstOrNull).whereType<CastingModel>().toList();
 
     if (items.isEmpty) {
-      return const Center(child: EmptyState(icon: Iconsax.briefcase, title: AppStrings.emptyFavoritesTitle, subtitle: AppStrings.emptyFavoritesSubtitle, compact: true));
+      return Center(child: EmptyState(icon: Iconsax.briefcase, title: AppStrings.emptyFavoritesTitle, subtitle: AppStrings.emptyFavoritesSubtitle, compact: true));
     }
 
     return ListView.separated(
@@ -131,9 +136,9 @@ class _CastingFavorites extends ConsumerWidget {
       itemBuilder: (context, index) {
         final casting = items[index];
         return KrCastingCard(
-          title: casting.title,
+          title: DisplayLocalizer.t(casting.title),
           bannerUrl: casting.bannerUrl,
-          role: casting.role,
+          role: DisplayLocalizer.t(casting.role),
           location: casting.locationLabel,
           salaryLabel: Formatters.formatSalary(casting.salary, currency: casting.currency),
           deadline: casting.applicationDeadline,
@@ -160,7 +165,7 @@ class _AgencyFavorites extends ConsumerWidget {
     final items = favorites.map((f) => agencies.where((a) => a.id == f.itemId).firstOrNull).whereType<AgencyModel>().toList();
 
     if (items.isEmpty) {
-      return const Center(child: EmptyState(icon: Iconsax.buildings, title: AppStrings.emptyFavoritesTitle, subtitle: AppStrings.emptyFavoritesSubtitle, compact: true));
+      return Center(child: EmptyState(icon: Iconsax.buildings, title: AppStrings.emptyFavoritesTitle, subtitle: AppStrings.emptyFavoritesSubtitle, compact: true));
     }
 
     return ListView.separated(
@@ -172,7 +177,7 @@ class _AgencyFavorites extends ConsumerWidget {
         return KrAgencyCard(
           name: agency.name,
           logoUrl: agency.logoUrl,
-          location: agency.city,
+          location: DisplayLocalizer.t(agency.city),
           verified: agency.isVerified,
           talentCount: agency.talentCount,
           onTap: () => context.push(RouteNames.agencyDetailPath(agency.id)),

@@ -13,7 +13,7 @@ class KrSectionHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
-    this.actionLabel = AppStrings.seeAll,
+    this.actionLabel,
     this.onActionTap,
     this.padding = const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
     this.goldLabel,
@@ -30,6 +30,7 @@ class KrSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedAction = actionLabel ?? AppStrings.seeAll;
     return Padding(
       padding: padding,
       child: Row(
@@ -62,7 +63,7 @@ class KrSectionHeader extends StatelessWidget {
               ],
             ),
           ),
-          if (onActionTap != null && actionLabel != null)
+          if (onActionTap != null)
             GestureDetector(
               onTap: onActionTap,
               child: Padding(
@@ -71,7 +72,7 @@ class KrSectionHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      actionLabel!,
+                      resolvedAction,
                       style: AppTextStyles.buttonSmall.copyWith(color: AppColors.gold),
                     ),
                     const SizedBox(width: 2),

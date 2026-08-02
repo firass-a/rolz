@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../shared/providers/providers.dart';
@@ -24,46 +26,68 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Settings'),
+      appBar: CustomAppBar(title: AppStrings.settings),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.xxxl),
         children: [
-          const _SectionLabel('Preferences'),
+          _SectionLabel(AppStrings.preferences),
           _SettingsCard(
             children: [
               _SwitchRow(
                 icon: Iconsax.notification,
-                label: 'Push Notifications',
+                label: AppStrings.pushNotifications,
                 value: settings.notificationsEnabled,
                 onChanged: (_) => notifier.toggleNotifications(),
               ),
               _SwitchRow(
                 icon: Iconsax.lock,
-                label: 'Private Profile',
+                label: AppStrings.privateProfile,
                 value: settings.privacyPrivateProfile,
                 onChanged: (_) => notifier.togglePrivateProfile(),
               ),
               _NavRow(
                 icon: Iconsax.global,
-                label: 'Language',
-                value: settings.language.label,
-                onTap: () => notifier.setLanguage(settings.language.name == 'en' ? AppLanguage.fr : AppLanguage.en),
+                label: AppStrings.language,
+                value: settings.language == AppLanguage.ar
+                    ? AppStrings.languageArabic
+                    : AppStrings.languageEnglish,
+                onTap: () => notifier.setLanguage(
+                  settings.language == AppLanguage.en ? AppLanguage.ar : AppLanguage.en,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
-          const _SectionLabel('Support'),
+          _SectionLabel(AppStrings.support),
           _SettingsCard(
-            children: const [
-              _NavRow(icon: Iconsax.message_question, label: 'Help & Support'),
-              _NavRow(icon: Iconsax.document_text, label: 'Terms & Privacy Policy'),
-              _NavRow(icon: Iconsax.info_circle, label: 'About KAST-ROLZ', value: 'v1.0.0'),
+            children: [
+              _NavRow(
+                icon: Iconsax.info_circle,
+                label: AppStrings.aboutKastRolz,
+                value: 'v1.0.0',
+                onTap: () => context.push(RouteNames.about),
+              ),
+              _NavRow(
+                icon: Iconsax.sms,
+                label: AppStrings.contactUs,
+                onTap: () => context.push(RouteNames.contact),
+              ),
+              _NavRow(
+                icon: Iconsax.document_text,
+                label: AppStrings.termsOfService,
+                onTap: () => context.push(RouteNames.terms),
+              ),
+              _NavRow(
+                icon: Iconsax.shield_tick,
+                label: AppStrings.privacyPolicy,
+                onTap: () => context.push(RouteNames.privacy),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
           if (auth.isAuthenticated || auth.isGuest)
             PremiumButton.danger(
-              label: auth.isGuest ? 'Exit Guest Mode' : AppStrings.logout,
+              label: auth.isGuest ? AppStrings.exitGuestMode : AppStrings.logout,
               fullWidth: true,
               icon: Iconsax.logout,
               onPressed: () => ref.read(authProvider.notifier).logout(),
@@ -118,12 +142,15 @@ class _SwitchRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
-      value: value,
-      onChanged: onChanged,
-      secondary: Icon(icon, size: 20, color: AppColors.gold),
-      title: Text(label, style: AppTextStyles.body),
-      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+    return Material(
+      color: Colors.transparent,
+      child: SwitchListTile(
+        value: value,
+        onChanged: onChanged,
+        secondary: Icon(icon, size: 20, color: AppColors.gold),
+        title: Text(label, style: AppTextStyles.body),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      ),
     );
   }
 }
@@ -138,20 +165,29 @@ class _NavRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      leading: Icon(icon, size: 20, color: AppColors.gold),
-      title: Text(label, style: AppTextStyles.body),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (value != null) ...[
-            Text(value!, style: AppTextStyles.bodySmall),
-            const SizedBox(width: 6),
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        leading: Icon(icon, size: 20, color: AppColors.gold),
+        title: Text(label, style: AppTextStyles.body),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (value != null) ...[
+              Text(value!, style: AppTextStyles.bodySmall),
+              const SizedBox(width: 6),
+            ],
+            Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? Iconsax.arrow_left_3
+                  : Iconsax.arrow_right_3,
+              size: 15,
+              color: AppColors.textMuted,
+            ),
           ],
-          const Icon(Iconsax.arrow_right_3, size: 15, color: AppColors.textMuted),
-        ],
+        ),
       ),
     );
   }

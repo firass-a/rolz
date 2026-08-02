@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../constants/app_colors.dart';
+import '../constants/app_strings.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/formatters.dart';
 import 'kr_card.dart';
@@ -215,10 +216,10 @@ class KrCastingCard extends StatelessWidget {
     return Row(
       children: [
         if (featured) ...[
-          const _RibbonBadge(icon: Iconsax.crown_1, label: 'Featured', color: AppColors.gold),
+          _RibbonBadge(icon: Iconsax.crown_1, label: AppStrings.castingFeatured, color: AppColors.gold),
           if (urgent) const SizedBox(width: 6),
         ],
-        if (urgent) const _RibbonBadge(icon: Iconsax.flag, label: 'Urgent', color: AppColors.error),
+        if (urgent) _RibbonBadge(icon: Iconsax.flag, label: AppStrings.castingUrgent, color: AppColors.error),
       ],
     );
   }

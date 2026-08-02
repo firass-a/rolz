@@ -5,9 +5,8 @@ import 'package:shimmer/shimmer.dart';
 
 import '../constants/app_colors.dart';
 
-/// Thin wrapper around [CachedNetworkImage] that standardises the shimmer
-/// placeholder and error state used everywhere media is loaded from the
-/// network in KAST-ROLZ.
+/// Thin wrapper around network or asset images that standardises the shimmer
+/// placeholder and error state used everywhere media is shown in KAST-ROLZ.
 class KrNetworkImage extends StatelessWidget {
   const KrNetworkImage({
     super.key,
@@ -26,12 +25,30 @@ class KrNetworkImage extends StatelessWidget {
   final BorderRadius? borderRadius;
   final IconData errorIcon;
 
+  bool get _isAsset {
+    final url = imageUrl;
+    return url != null && (url.startsWith('assets/') || url.startsWith('asset:'));
+  }
+
+  String get _assetPath {
+    final url = imageUrl!;
+    return url.startsWith('asset:') ? url.substring('asset:'.length) : url;
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget image;
 
     if (imageUrl == null || imageUrl!.isEmpty) {
       image = _errorPlaceholder();
+    } else if (_isAsset) {
+      image = Image.asset(
+        _assetPath,
+        width: width,
+        height: height,
+        fit: fit,
+        errorBuilder: (_, __, ___) => _errorPlaceholder(),
+      );
     } else {
       image = CachedNetworkImage(
         imageUrl: imageUrl!,

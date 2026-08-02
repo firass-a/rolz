@@ -7,6 +7,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -38,12 +40,12 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
     if (casting == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: const CustomAppBar(title: 'Casting'),
-        body: const Center(
+        appBar: CustomAppBar(title: AppStrings.navCasting),
+        body: Center(
           child: ErrorState(
             icon: Iconsax.briefcase,
-            title: 'Casting Not Found',
-            subtitle: 'This casting may have been removed or closed.',
+            title: AppStrings.castingNotFound,
+            subtitle: AppStrings.castingNotFoundSubtitle,
           ),
         ),
       );
@@ -93,17 +95,17 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                     spacing: 6,
                     runSpacing: 6,
                     children: [
-                      if (casting.isFeatured) const StatusBadge.gold('Featured', showDot: false),
-                      if (casting.isUrgent) const StatusBadge.error('Urgent', showDot: false),
+                      if (casting.isFeatured) StatusBadge.gold(AppStrings.castingFeatured, showDot: false),
+                      if (casting.isUrgent) StatusBadge.error(AppStrings.castingUrgent, showDot: false),
                       StatusBadge(label: casting.status.label, kind: _statusKind(casting.status)),
                       StatusBadge(label: casting.type.label, kind: KrStatusKind.neutral, showDot: false),
                     ],
                   ).animate().fadeIn(duration: 300.ms),
                   const SizedBox(height: AppSpacing.md),
-                  Text(casting.title, style: AppTextStyles.sectionTitle).animate().fadeIn(delay: 40.ms, duration: 300.ms),
+                  Text(DisplayLocalizer.t(casting.title), style: AppTextStyles.sectionTitle).animate().fadeIn(delay: 40.ms, duration: 300.ms),
                   if (casting.role.isNotEmpty) ...[
                     const SizedBox(height: 4),
-                    Text(casting.role, style: AppTextStyles.body.copyWith(color: AppColors.gold)).animate().fadeIn(delay: 70.ms, duration: 300.ms),
+                    Text(DisplayLocalizer.t(casting.role), style: AppTextStyles.body.copyWith(color: AppColors.gold)).animate().fadeIn(delay: 70.ms, duration: 300.ms),
                   ],
                   const SizedBox(height: AppSpacing.md),
                   Wrap(
@@ -112,7 +114,7 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                     children: [
                       _MetaItem(icon: Iconsax.location, label: casting.locationLabel),
                       _MetaItem(icon: Iconsax.dollar_circle, label: Formatters.formatSalary(casting.salary, currency: casting.currency), gold: true),
-                      _MetaItem(icon: Iconsax.calendar, label: 'Shoot ${Formatters.formatDate(casting.shootStartDate)}'),
+                      _MetaItem(icon: Iconsax.calendar, label: AppStrings.shootOn(Formatters.formatDate(casting.shootStartDate))),
                       _MetaItem(
                         icon: Iconsax.clock,
                         label: Formatters.formatDeadline(casting.applicationDeadline),
@@ -120,10 +122,10 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                       ),
                     ],
                   ).animate().fadeIn(delay: 100.ms, duration: 300.ms),
-                  _Section(title: 'Description', child: Text(casting.description.orPlaceholder('No description provided.'), style: AppTextStyles.bodyMuted)),
+                  _Section(title: AppStrings.description, child: Text(DisplayLocalizer.description(casting.description).orPlaceholder(AppStrings.noDescriptionProvided), style: AppTextStyles.bodyMuted)),
                   if (casting.requirements.isNotEmpty)
                     _Section(
-                      title: 'Requirements',
+                      title: AppStrings.requirements,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: casting.requirements
@@ -134,41 +136,41 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                                     children: [
                                       const Icon(Iconsax.tick_circle, size: 15, color: AppColors.gold),
                                       const SizedBox(width: AppSpacing.sm),
-                                      Expanded(child: Text(r, style: AppTextStyles.bodyMuted)),
+                                      Expanded(child: Text(DisplayLocalizer.t(r), style: AppTextStyles.bodyMuted)),
                                     ],
                                   ),
                                 ))
                             .toList(),
                       ),
                     ),
-                  if (casting.skills.isNotEmpty) _Section(title: 'Skills', child: _ChipWrap(items: casting.skills)),
+                  if (casting.skills.isNotEmpty) _Section(title: AppStrings.skills, child: _ChipWrap(items: casting.skills)),
                   if (casting.languages.isNotEmpty)
-                    _Section(title: 'Languages', child: _ChipWrap(items: casting.languages, icon: Iconsax.language_square)),
+                    _Section(title: AppStrings.languages, child: _ChipWrap(items: casting.languages, icon: Iconsax.language_square)),
                   _Section(
-                    title: 'Profile Requirements',
+                    title: AppStrings.profileRequirements,
                     child: GridView.count(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,
                       mainAxisSpacing: AppSpacing.sm,
                       crossAxisSpacing: AppSpacing.sm,
-                      childAspectRatio: 2.4,
+                      childAspectRatio: 1.35,
                       children: [
-                        KrStatCard(icon: Iconsax.profile_2user, value: Formatters.formatAgeRange(casting.ageMin, casting.ageMax), label: 'Age Range', animateCounter: false, compact: true),
-                        KrStatCard(icon: Iconsax.ruler, value: casting.heightMin == null && casting.heightMax == null ? 'Any' : '${Formatters.formatHeight(casting.heightMin)} – ${Formatters.formatHeight(casting.heightMax)}', label: 'Height', animateCounter: false, compact: true),
-                        KrStatCard(icon: Iconsax.user_tag, value: casting.gender?.label ?? 'Any', label: 'Gender', animateCounter: false, compact: true),
-                        KrStatCard(icon: Iconsax.medal_star, value: casting.experienceLevel.label, label: 'Experience', animateCounter: false, compact: true),
+                        KrStatCard(icon: Iconsax.profile_2user, value: Formatters.formatAgeRange(casting.ageMin, casting.ageMax), label: AppStrings.ageRange, animateCounter: false, compact: true),
+                        KrStatCard(icon: Iconsax.ruler, value: casting.heightMin == null && casting.heightMax == null ? AppStrings.any : '${Formatters.formatHeight(casting.heightMin)} – ${Formatters.formatHeight(casting.heightMax)}', label: AppStrings.height, animateCounter: false, compact: true),
+                        KrStatCard(icon: Iconsax.user_tag, value: casting.gender?.label ?? AppStrings.any, label: AppStrings.gender, animateCounter: false, compact: true),
+                        KrStatCard(icon: Iconsax.medal_star, value: casting.experienceLevel.label, label: AppStrings.experience, animateCounter: false, compact: true),
                       ],
                     ),
                   ),
                   _Section(
-                    title: 'Posted By',
+                    title: AppStrings.postedBy,
                     child: _RecruiterCard(
                       recruiter: recruiter,
                       agency: agency,
                       onTap: agency != null
                           ? () => context.push(RouteNames.agencyDetailPath(agency.id))
-                          : () => context.showSnack('Recruiter profile coming soon.'),
+                          : () => context.showSnack(AppStrings.recruiterProfileComingSoon),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -191,7 +193,7 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                     ),
                   if (similar.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
-                    KrSectionHeader(title: 'Similar Castings', padding: EdgeInsets.zero),
+                    KrSectionHeader(title: AppStrings.similarCastings, padding: EdgeInsets.zero),
                     const SizedBox(height: AppSpacing.md),
                     SizedBox(
                       height: 240,
@@ -204,9 +206,9 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                           return SizedBox(
                             width: 260,
                             child: KrCastingCard(
-                              title: c.title,
+                              title: DisplayLocalizer.t(c.title),
                               bannerUrl: c.bannerUrl,
-                              role: c.role,
+                              role: DisplayLocalizer.t(c.role),
                               location: c.locationLabel,
                               salaryLabel: Formatters.formatSalary(c.salary, currency: c.currency),
                               deadline: c.applicationDeadline,
@@ -231,32 +233,32 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
   Future<void> _apply(CastingModel casting) async {
     final talent = ref.read(currentTalentProvider);
     if (talent == null) {
-      context.showSnack('Only talent accounts can apply to castings.', isError: true);
+      context.showSnack(AppStrings.onlyTalentCanApply, isError: true);
       return;
     }
     setState(() => _applying = true);
     await ref.read(applicationRepositoryProvider).apply(castingId: casting.id, talentId: talent.id);
     if (!mounted) return;
     setState(() => _applying = false);
-    context.showSnack('Application submitted!');
+    context.showSnack(AppStrings.applicationSubmitted);
   }
 
   void _toggleFavorite(String? userId, CastingModel casting) {
     if (userId == null) {
-      context.showSnack('Sign in to save favorites.', isError: true);
+      context.showSnack(AppStrings.signInToFavorites, isError: true);
       return;
     }
     final favorited = ref.read(favoriteRepositoryProvider).toggleFavorite(userId, casting.id, FavoriteItemType.casting);
-    context.showSnack(favorited ? 'Added to favorites.' : 'Removed from favorites.');
+    context.showSnack(favorited ? AppStrings.addedToFavorites : AppStrings.removedFromFavorites);
   }
 
   void _share(CastingModel casting) {
-    context.showSnack('Share link for "${casting.title}" copied to clipboard.');
+    context.showSnack(AppStrings.shareLinkCopied(casting.title));
   }
 
   Future<void> _report(String? userId, CastingModel casting) async {
     if (userId == null) {
-      context.showSnack('Sign in to report a casting.', isError: true);
+      context.showSnack(AppStrings.signInToReportCasting, isError: true);
       return;
     }
     final reason = await showKrBottomSheet<String>(
@@ -271,25 +273,23 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
           reason: reason.trim(),
         );
     if (!mounted) return;
-    context.showSnack('Report submitted. Our team will review it shortly.');
+    context.showSnack(AppStrings.reportSubmitted);
   }
 
   Future<void> _duplicate(CastingModel casting) async {
     await ref.read(castingRepositoryProvider).duplicate(casting.id);
     if (!mounted) return;
-    context.showSnack('Casting duplicated as a draft.');
+    context.showSnack(AppStrings.castingDuplicated);
   }
 
   Future<void> _toggleArchive(CastingModel casting) async {
     final archiving = !casting.isArchived;
     final confirmed = await ConfirmationSheet.show(
       context,
-      title: archiving ? 'Archive this casting?' : 'Restore this casting?',
-      body: archiving
-          ? 'Archived castings stop accepting new applications and disappear from discovery.'
-          : 'This casting will reopen and become visible again.',
+      title: archiving ? AppStrings.archiveThisCasting : AppStrings.restoreThisCasting,
+      body: archiving ? AppStrings.archiveCastingBodyDetail : AppStrings.restoreCastingBody,
       icon: Iconsax.archive,
-      confirmLabel: archiving ? 'Archive' : 'Restore',
+      confirmLabel: archiving ? AppStrings.archive : AppStrings.restore,
       isDanger: archiving,
     );
     if (!confirmed) return;
@@ -299,21 +299,21 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
       await ref.read(castingRepositoryProvider).restore(casting.id);
     }
     if (!mounted) return;
-    context.showSnack(archiving ? 'Casting archived.' : 'Casting restored.');
+    context.showSnack(archiving ? AppStrings.castingArchived : AppStrings.castingRestored);
   }
 
   Future<void> _delete(CastingModel casting) async {
     final confirmed = await ConfirmationSheet.show(
       context,
-      title: 'Delete this casting?',
-      body: 'This action cannot be undone. All applications tied to it will remain but the listing will disappear.',
+      title: AppStrings.deleteThisCasting,
+      body: AppStrings.deleteCastingBodyDetail,
       icon: Iconsax.trash,
-      confirmLabel: 'Delete',
+      confirmLabel: AppStrings.delete,
     );
     if (!confirmed) return;
     await ref.read(castingRepositoryProvider).delete(casting.id);
     if (!mounted) return;
-    context.showSnack('Casting deleted.');
+    context.showSnack(AppStrings.castingDeleted);
     if (context.canPop()) {
       Navigator.of(context).pop();
     } else {
@@ -504,7 +504,7 @@ class _ChipWrap extends StatelessWidget {
                       Icon(icon, size: 13, color: AppColors.gold),
                       const SizedBox(width: 6),
                     ],
-                    Text(item, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary)),
+                    Text(DisplayLocalizer.t(item), style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary)),
                   ],
                 ),
               ))
@@ -521,7 +521,7 @@ class _RecruiterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = agency?.name ?? recruiter?.companyName ?? recruiter?.fullName ?? 'KAST-ROLZ Recruiter';
+    final name = agency?.name ?? recruiter?.companyName ?? recruiter?.fullName ?? AppStrings.kastRolzRecruiter;
     final subtitle = agency?.locationLabel ?? recruiter?.locationLabel ?? '';
     final imageUrl = agency?.logoUrl ?? recruiter?.avatarUrl;
     final verified = agency?.isVerified ?? recruiter?.isVerified ?? false;
@@ -575,7 +575,7 @@ class _ApplySection extends StatelessWidget {
           children: [
             Icon(Iconsax.send_2, size: 18, color: AppColors.gold),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: Text('You applied ${application!.createdAt.timeAgo}', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary))),
+            Expanded(child: Text(AppStrings.youApplied(application!.createdAt.timeAgo), style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary))),
             StatusBadge(label: application!.status.label, kind: _applicationKind(application!.status)),
           ],
         ),
@@ -584,7 +584,7 @@ class _ApplySection extends StatelessWidget {
 
     if (currentTalent == null) {
       return PremiumButton.secondary(
-        label: 'Sign In as Talent to Apply',
+        label: AppStrings.signInAsTalentToApply,
         icon: Iconsax.send_2,
         fullWidth: true,
         onPressed: onApply,
@@ -594,7 +594,7 @@ class _ApplySection extends StatelessWidget {
     final disabled = !casting.isOpen || casting.isExpired;
 
     return PremiumButton.primary(
-      label: disabled ? 'Applications Closed' : 'Apply Now',
+      label: disabled ? AppStrings.applicationsClosed : AppStrings.apply,
       icon: disabled ? null : Iconsax.send_2,
       fullWidth: true,
       isLoading: applying,
@@ -625,21 +625,21 @@ class _ManageSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Manage This Casting', style: AppTextStyles.subsectionTitle),
+        Text(AppStrings.manageThisCasting, style: AppTextStyles.subsectionTitle),
         const SizedBox(height: AppSpacing.md),
         Row(
           children: [
             Expanded(
-              child: PremiumButton.secondary(label: 'View Applicants (${casting.applicantCount})', icon: Iconsax.profile_2user, onPressed: onApplicants),
+              child: PremiumButton.secondary(label: AppStrings.viewApplicantsCount(casting.applicantCount), icon: Iconsax.profile_2user, onPressed: onApplicants),
             ),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
         Row(
           children: [
-            Expanded(child: PremiumButton.ghost(label: 'Edit', icon: Iconsax.edit_2, onPressed: onEdit)),
+            Expanded(child: PremiumButton.ghost(label: AppStrings.edit, icon: Iconsax.edit_2, onPressed: onEdit)),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: PremiumButton.ghost(label: 'Duplicate', icon: Iconsax.copy, onPressed: onDuplicate)),
+            Expanded(child: PremiumButton.ghost(label: AppStrings.duplicate, icon: Iconsax.copy, onPressed: onDuplicate)),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -647,13 +647,13 @@ class _ManageSection extends StatelessWidget {
           children: [
             Expanded(
               child: PremiumButton.ghost(
-                label: casting.isArchived ? 'Restore' : 'Archive',
+                label: casting.isArchived ? AppStrings.restore : AppStrings.archive,
                 icon: Iconsax.archive,
                 onPressed: onArchive,
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: PremiumButton.danger(label: 'Delete', icon: Iconsax.trash, onPressed: onDelete)),
+            Expanded(child: PremiumButton.danger(label: AppStrings.delete, icon: Iconsax.trash, onPressed: onDelete)),
           ],
         ),
       ],
@@ -690,24 +690,24 @@ class _ReportSheetState extends State<_ReportSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Report "${widget.subjectLabel}"', style: AppTextStyles.sectionTitle.copyWith(fontSize: 21)),
+          Text(AppStrings.reportSubject(widget.subjectLabel), style: AppTextStyles.sectionTitle.copyWith(fontSize: 21)),
           const SizedBox(height: AppSpacing.sm),
-          Text('Tell us what\'s wrong. Our moderation team reviews every report.', style: AppTextStyles.bodyMuted),
+          Text(AppStrings.reportBodyHint, style: AppTextStyles.bodyMuted),
           const SizedBox(height: AppSpacing.lg),
           TextField(
             controller: _controller,
             maxLines: 4,
             style: AppTextStyles.input,
-            decoration: const InputDecoration(hintText: 'Describe the issue…'),
+            decoration: InputDecoration(hintText: AppStrings.describeIssue),
           ),
           const SizedBox(height: AppSpacing.lg),
           PremiumButton.danger(
-            label: 'Submit Report',
+            label: AppStrings.submitReport,
             fullWidth: true,
             onPressed: () => Navigator.of(context).pop(_controller.text),
           ),
           const SizedBox(height: AppSpacing.sm),
-          PremiumButton.ghost(label: 'Cancel', fullWidth: true, onPressed: () => Navigator.of(context).pop()),
+          PremiumButton.ghost(label: AppStrings.cancel, fullWidth: true, onPressed: () => Navigator.of(context).pop()),
         ],
       ),
     );

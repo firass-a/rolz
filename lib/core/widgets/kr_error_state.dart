@@ -14,32 +14,40 @@ class ErrorState extends StatelessWidget {
   const ErrorState({
     super.key,
     this.icon = Iconsax.warning_2,
-    this.title = AppStrings.errorGenericTitle,
-    this.subtitle = AppStrings.errorGenericSubtitle,
+    this.title,
+    this.subtitle,
     this.onRetry,
-    this.retryLabel = AppStrings.retry,
+    this.retryLabel,
     this.compact = false,
-  });
+  }) : _connection = false;
 
   /// Convenience constructor for connectivity failures.
   const ErrorState.connection({
     super.key,
     this.onRetry,
-    this.retryLabel = AppStrings.retry,
+    this.retryLabel,
     this.compact = false,
   })  : icon = Iconsax.wifi_square,
-        title = AppStrings.errorConnectionTitle,
-        subtitle = AppStrings.errorConnectionSubtitle;
+        title = null,
+        subtitle = null,
+        _connection = true;
 
   final IconData icon;
-  final String title;
+  final String? title;
   final String? subtitle;
   final VoidCallback? onRetry;
-  final String retryLabel;
+  final String? retryLabel;
   final bool compact;
+  final bool _connection;
 
   @override
   Widget build(BuildContext context) {
+    final resolvedTitle = title ??
+        (_connection ? AppStrings.errorConnectionTitle : AppStrings.errorGenericTitle);
+    final resolvedSubtitle = subtitle ??
+        (_connection ? AppStrings.errorConnectionSubtitle : AppStrings.errorGenericSubtitle);
+    final resolvedRetry = retryLabel ?? AppStrings.retry;
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.xl,
@@ -61,22 +69,20 @@ class ErrorState extends StatelessWidget {
           ).animate().shake(duration: 500.ms, hz: 3, offset: const Offset(4, 0)),
           SizedBox(height: compact ? AppSpacing.md : AppSpacing.lg),
           Text(
-            title,
+            resolvedTitle,
             textAlign: TextAlign.center,
             style: AppTextStyles.sectionTitle.copyWith(fontSize: compact ? 19 : 22),
           ),
-          if (subtitle != null) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              subtitle!,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMuted,
-            ),
-          ],
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            resolvedSubtitle,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.bodyMuted,
+          ),
           if (onRetry != null) ...[
             SizedBox(height: compact ? AppSpacing.lg : AppSpacing.xl),
             PremiumButton.secondary(
-              label: retryLabel,
+              label: resolvedRetry,
               icon: Iconsax.refresh,
               onPressed: onRetry,
             ),

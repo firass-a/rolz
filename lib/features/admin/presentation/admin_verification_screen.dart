@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -35,7 +36,7 @@ class _AdminVerificationScreenState extends ConsumerState<AdminVerificationScree
 
   void _reject(String id, String name) {
     setState(() => _rejectedIds.add(id));
-    context.showSnack('Verification request for $name rejected.', isError: true);
+    context.showSnack(AppStrings.verificationRejected(name), isError: true);
   }
 
   @override
@@ -54,13 +55,13 @@ class _AdminVerificationScreenState extends ConsumerState<AdminVerificationScree
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: 'Verification Queue',
+        title: AppStrings.verificationQueue,
         showBackButton: true,
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: 'Talents (${talents.length})'),
-            Tab(text: 'Recruiters (${recruiters.length})'),
+            Tab(text: AppStrings.talentsTabCount(talents.length)),
+            Tab(text: AppStrings.recruitersTabCount(recruiters.length)),
           ],
         ),
       ),
@@ -84,11 +85,11 @@ class _TalentQueue extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (talents.isEmpty) {
-      return const Center(
+      return Center(
         child: EmptyState(
           icon: Iconsax.shield_tick,
-          title: 'All Caught Up',
-          subtitle: 'No talent verification requests pending.',
+          title: AppStrings.allCaughtUp,
+          subtitle: AppStrings.noTalentVerificationPending,
           compact: true,
         ),
       );
@@ -109,7 +110,7 @@ class _TalentQueue extends ConsumerWidget {
             ref.read(talentProvider.notifier).update(talent.copyWith(isVerified: true));
             final user = ref.read(userByIdProvider(talent.userId));
             if (user != null) ref.read(userProvider.notifier).setVerified(user.id, true);
-            context.showSnack('${talent.fullName} is now verified.');
+            context.showSnack(AppStrings.isNowVerified(talent.fullName));
           },
           onReject: () => onReject(talent.id, talent.fullName),
         ).animate().fadeIn(delay: (25 * (index % 12)).ms, duration: 260.ms);
@@ -127,11 +128,11 @@ class _RecruiterQueue extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (recruiters.isEmpty) {
-      return const Center(
+      return Center(
         child: EmptyState(
           icon: Iconsax.shield_tick,
-          title: 'All Caught Up',
-          subtitle: 'No recruiter verification requests pending.',
+          title: AppStrings.allCaughtUp,
+          subtitle: AppStrings.noRecruiterVerificationPending,
           compact: true,
         ),
       );
@@ -153,7 +154,7 @@ class _RecruiterQueue extends ConsumerWidget {
             ref.read(recruiterProvider.notifier).update(recruiter.copyWith(isVerified: true));
             final user = ref.read(userByIdProvider(recruiter.userId));
             if (user != null) ref.read(userProvider.notifier).setVerified(user.id, true);
-            context.showSnack('${recruiter.companyName} is now verified.');
+            context.showSnack(AppStrings.isNowVerified(recruiter.companyName));
           },
           onReject: () => onReject(recruiter.id, name),
         ).animate().fadeIn(delay: (25 * (index % 12)).ms, duration: 260.ms);
@@ -200,17 +201,17 @@ class _VerificationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const StatusBadge.warning('Pending'),
+              StatusBadge.warning(AppStrings.pending),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Text('Requested ${submitted.timeAgo}', style: AppTextStyles.caption),
+          Text(AppStrings.requestedAgo(submitted.timeAgo), style: AppTextStyles.caption),
           const SizedBox(height: AppSpacing.md),
           Row(
             children: [
               Expanded(
                 child: PremiumButton.ghost(
-                  label: 'Reject',
+                  label: AppStrings.reject,
                   icon: Iconsax.close_circle,
                   onPressed: onReject,
                 ),
@@ -218,7 +219,7 @@ class _VerificationCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: PremiumButton.primary(
-                  label: 'Approve',
+                  label: AppStrings.approve,
                   icon: Iconsax.shield_tick,
                   onPressed: onApprove,
                 ),

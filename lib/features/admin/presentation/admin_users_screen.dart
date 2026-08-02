@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -37,8 +39,8 @@ class _AdminUserRow {
   }
 
   String get subtitle {
-    if (talent != null) return '${talent!.category.label} · ${talent!.city}';
-    if (recruiter != null) return '${recruiter!.companyType.label} · ${recruiter!.city}';
+    if (talent != null) return '${talent!.category.label} · ${DisplayLocalizer.t(talent!.city)}';
+    if (recruiter != null) return '${recruiter!.companyType.label} · ${DisplayLocalizer.t(recruiter!.city)}';
     return user.email;
   }
 }
@@ -101,11 +103,15 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> with Single
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: 'Manage Users',
+        title: AppStrings.manageUsers,
         showBackButton: !widget.embedded,
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [Tab(text: 'Talents'), Tab(text: 'Recruiters'), Tab(text: 'All Users')],
+          tabs: [
+            Tab(text: AppStrings.talents),
+            Tab(text: AppStrings.recruiters),
+            Tab(text: AppStrings.allUsers),
+          ],
         ),
       ),
       body: Column(
@@ -114,7 +120,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> with Single
             padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
             child: KrSearchBar(
               controller: _searchController,
-              hintText: 'Search by name, email or company…',
+              hintText: AppStrings.searchUsersHint,
               onChanged: (v) => setState(() => _query = v),
             ),
           ),
@@ -142,11 +148,11 @@ class _UserListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (rows.isEmpty) {
-      return const Center(
+      return Center(
         child: EmptyState(
           icon: Iconsax.profile_2user,
-          title: 'No Users Found',
-          subtitle: 'Try a different search term.',
+          title: AppStrings.noUsersFound,
+          subtitle: AppStrings.noUsersFoundSubtitle,
           compact: true,
         ),
       );
@@ -184,30 +190,34 @@ class _UserRowCard extends ConsumerWidget {
         if (row.recruiter != null) {
           ref.read(recruiterProvider.notifier).update(row.recruiter!.copyWith(isVerified: newValue));
         }
-        context.showSnack(newValue ? '${row.displayName} is now verified.' : '${row.displayName} is now unverified.');
+        context.showSnack(
+          newValue
+              ? AppStrings.isNowVerified(row.displayName)
+              : AppStrings.isNowUnverified(row.displayName),
+        );
         break;
       case 'ban':
         final banning = user.status != UserStatus.banned;
         if (banning) {
           final confirmed = await ConfirmationSheet.show(
             context,
-            title: 'Ban ${row.displayName}?',
-            body: 'They will lose access to KAST-ROLZ immediately. You can reverse this later.',
+            title: AppStrings.banNamed(row.displayName),
+            body: AppStrings.confirmBanBody,
             icon: Iconsax.shield_cross,
-            confirmLabel: 'Ban User',
+            confirmLabel: AppStrings.banUser,
           );
           if (!confirmed) return;
           ref.read(userProvider.notifier).ban(user.id);
           if (row.talent != null) {
             ref.read(talentProvider.notifier).update(row.talent!.copyWith(isArchived: true));
           }
-          if (context.mounted) context.showSnack('${row.displayName} has been banned.', isError: true);
+          if (context.mounted) context.showSnack(AppStrings.hasBeenBanned(row.displayName), isError: true);
         } else {
           ref.read(userProvider.notifier).unban(user.id);
           if (row.talent != null) {
             ref.read(talentProvider.notifier).update(row.talent!.copyWith(isArchived: false));
           }
-          if (context.mounted) context.showSnack('${row.displayName} has been unbanned.');
+          if (context.mounted) context.showSnack(AppStrings.hasBeenUnbanned(row.displayName));
         }
         break;
       case 'edit':
@@ -216,14 +226,14 @@ class _UserRowCard extends ConsumerWidget {
       case 'delete':
         final confirmed = await ConfirmationSheet.show(
           context,
-          title: 'Delete ${row.displayName}?',
-          body: 'This permanently removes their account and profile. This cannot be undone.',
+          title: AppStrings.deleteNamed(row.displayName),
+          body: AppStrings.deleteUserBody,
         );
         if (!confirmed) return;
         ref.read(userProvider.notifier).delete(user.id);
         if (row.talent != null) ref.read(talentProvider.notifier).delete(row.talent!.id);
         if (row.recruiter != null) ref.read(recruiterProvider.notifier).delete(row.recruiter!.id);
-        if (context.mounted) context.showSnack('${row.displayName} was deleted.', isError: true);
+        if (context.mounted) context.showSnack(AppStrings.wasDeleted(row.displayName), isError: true);
         break;
     }
   }
@@ -279,7 +289,7 @@ class _UserRowCard extends ConsumerWidget {
                   children: [
                     StatusBadge.gold(user.role.label),
                     _statusBadge(user.status),
-                    if (user.isVerified) const VerifiedBadge(label: 'Verified', compact: true),
+                    if (user.isVerified) VerifiedBadge(label: AppStrings.talentVerified, compact: true),
                   ],
                 ),
               ],
@@ -288,26 +298,26 @@ class _UserRowCard extends ConsumerWidget {
           PopupMenuButton<String>(
             onSelected: (action) => _handleAction(context, ref, action),
             itemBuilder: (context) => [
-              const PopupMenuItem(value: 'view', child: _MenuRow(icon: Iconsax.eye, label: 'View')),
+              PopupMenuItem(value: 'view', child: _MenuRow(icon: Iconsax.eye, label: AppStrings.view)),
               PopupMenuItem(
                 value: 'verify',
                 child: _MenuRow(
                   icon: user.isVerified ? Iconsax.shield_cross : Iconsax.shield_tick,
-                  label: user.isVerified ? 'Unverify' : 'Verify',
+                  label: user.isVerified ? AppStrings.unverify : AppStrings.verify,
                 ),
               ),
-              const PopupMenuItem(value: 'edit', child: _MenuRow(icon: Iconsax.edit_2, label: 'Edit')),
+              PopupMenuItem(value: 'edit', child: _MenuRow(icon: Iconsax.edit_2, label: AppStrings.edit)),
               PopupMenuItem(
                 value: 'ban',
                 child: _MenuRow(
                   icon: banned ? Iconsax.shield_tick : Iconsax.shield_cross,
-                  label: banned ? 'Unban' : 'Ban',
+                  label: banned ? AppStrings.unban : AppStrings.ban,
                   color: banned ? AppColors.success : AppColors.error,
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'delete',
-                child: _MenuRow(icon: Iconsax.trash, label: 'Delete', color: AppColors.error),
+                child: _MenuRow(icon: Iconsax.trash, label: AppStrings.delete, color: AppColors.error),
               ),
             ],
           ),
@@ -379,23 +389,23 @@ class _UserDetailsSheet extends StatelessWidget {
           const SizedBox(height: 4),
           Center(child: Text(user.email, style: AppTextStyles.bodyMuted)),
           const SizedBox(height: AppSpacing.lg),
-          _DetailRow(label: 'Role', value: user.role.label),
-          _DetailRow(label: 'Status', value: user.status.label),
-          _DetailRow(label: 'Phone', value: user.phone.orPlaceholder('—')),
-          _DetailRow(label: 'Joined', value: user.createdAt.formattedDate),
-          _DetailRow(label: 'Last Seen', value: user.lastSeen.timeAgo),
+          _DetailRow(label: AppStrings.role, value: user.role.label),
+          _DetailRow(label: AppStrings.status, value: user.status.label),
+          _DetailRow(label: AppStrings.phone, value: user.phone.orPlaceholder('—')),
+          _DetailRow(label: AppStrings.joined, value: user.createdAt.formattedDate),
+          _DetailRow(label: AppStrings.lastSeen, value: user.lastSeen.timeAgo),
           if (row.talent != null) ...[
-            _DetailRow(label: 'Category', value: row.talent!.category.label),
-            _DetailRow(label: 'City', value: row.talent!.city),
-            _DetailRow(label: 'Rating', value: row.talent!.rating.toStringAsFixed(1)),
+            _DetailRow(label: AppStrings.category, value: row.talent!.category.label),
+            _DetailRow(label: AppStrings.city, value: DisplayLocalizer.t(row.talent!.city)),
+            _DetailRow(label: AppStrings.rating, value: row.talent!.rating.toStringAsFixed(1)),
           ],
           if (row.recruiter != null) ...[
-            _DetailRow(label: 'Company', value: row.recruiter!.companyName),
-            _DetailRow(label: 'City', value: row.recruiter!.city),
-            _DetailRow(label: 'Castings Posted', value: '${row.recruiter!.castingCount}'),
+            _DetailRow(label: AppStrings.company, value: row.recruiter!.companyName),
+            _DetailRow(label: AppStrings.city, value: DisplayLocalizer.t(row.recruiter!.city)),
+            _DetailRow(label: AppStrings.castingsPosted, value: '${row.recruiter!.castingCount}'),
           ],
           const SizedBox(height: AppSpacing.lg),
-          PremiumButton.ghost(label: 'Close', fullWidth: true, onPressed: () => Navigator.of(context).pop()),
+          PremiumButton.ghost(label: AppStrings.close, fullWidth: true, onPressed: () => Navigator.of(context).pop()),
         ],
       ),
     );
@@ -468,13 +478,13 @@ class _EditUserDialogState extends ConsumerState<_EditUserDialog> {
     }
 
     Navigator.of(context).pop();
-    context.showSnack('Profile updated.');
+    context.showSnack(AppStrings.profileUpdatedShort);
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit User'),
+      title: Text(AppStrings.editUser),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -483,19 +493,19 @@ class _EditUserDialogState extends ConsumerState<_EditUserDialog> {
             TextField(
               controller: _firstNameController,
               style: AppTextStyles.input,
-              decoration: const InputDecoration(labelText: 'First name'),
+              decoration: InputDecoration(labelText: AppStrings.firstName),
             ),
             const SizedBox(height: AppSpacing.md),
             TextField(
               controller: _lastNameController,
               style: AppTextStyles.input,
-              decoration: const InputDecoration(labelText: 'Last name'),
+              decoration: InputDecoration(labelText: AppStrings.lastName),
             ),
             const SizedBox(height: AppSpacing.md),
             DropdownButtonFormField<UserStatus>(
               value: _status,
               dropdownColor: AppColors.cardElevated,
-              decoration: const InputDecoration(labelText: 'Status'),
+              decoration: InputDecoration(labelText: AppStrings.status),
               items: UserStatus.values
                   .map((s) => DropdownMenuItem(value: s, child: Text(s.label)))
                   .toList(),
@@ -507,8 +517,8 @@ class _EditUserDialogState extends ConsumerState<_EditUserDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-        ElevatedButton(onPressed: _save, child: const Text('Save')),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppStrings.cancel)),
+        ElevatedButton(onPressed: _save, child: Text(AppStrings.save)),
       ],
     );
   }

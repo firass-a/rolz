@@ -6,6 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -56,7 +57,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   Future<void> _verify() async {
     context.dismissKeyboard();
     if (_code.length != _length) {
-      setState(() => _error = 'Enter the full 6-digit code.');
+      setState(() => _error = AppStrings.enterFullCode);
       return;
     }
     setState(() => _verifying = true);
@@ -65,7 +66,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     setState(() {
       _verifying = false;
       _verified = success;
-      _error = success ? null : 'That code didn\'t work. Please try again.';
+      _error = success ? null : AppStrings.invalidOtp;
     });
   }
 
@@ -113,12 +114,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
             child: const Icon(Iconsax.sms_tracking, size: 26, color: AppColors.gold),
           ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.85, 0.85), end: const Offset(1, 1)),
           const SizedBox(height: AppSpacing.xl),
-          Text('Verify Your Code', style: AppTextStyles.heroTitleCompact)
+          Text(AppStrings.verifyYourCode, style: AppTextStyles.heroTitleCompact)
               .animate()
               .fadeIn(delay: 80.ms, duration: 400.ms),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Enter the 6-digit code we sent you to confirm it\'s really you.',
+            AppStrings.verifyCodeBody,
             style: AppTextStyles.bodyMuted,
           ).animate().fadeIn(delay: 140.ms, duration: 400.ms),
           const SizedBox(height: AppSpacing.xxl),
@@ -137,7 +138,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
           ],
           const SizedBox(height: AppSpacing.xxl),
           PremiumButton.primary(
-            label: 'Verify',
+            label: AppStrings.verify,
             fullWidth: true,
             isLoading: _verifying,
             onPressed: _verify,
@@ -147,7 +148,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
             child: TextButton(
               onPressed: _reset,
               child: Text(
-                "Didn't get a code? Resend",
+                AppStrings.didntGetCodeResend,
                 style: AppTextStyles.buttonSmall.copyWith(color: AppColors.gold),
               ),
             ),
@@ -189,16 +190,16 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               duration: 500.ms,
             ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Verified!', style: AppTextStyles.sectionTitle).animate().fadeIn(delay: 120.ms, duration: 400.ms),
+        Text(AppStrings.verified, style: AppTextStyles.sectionTitle).animate().fadeIn(delay: 120.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'Your identity has been confirmed.',
+          AppStrings.identityConfirmed,
           style: AppTextStyles.bodyMuted,
           textAlign: TextAlign.center,
         ).animate().fadeIn(delay: 180.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.xxl),
         PremiumButton.secondary(
-          label: 'Done',
+          label: AppStrings.done,
           fullWidth: true,
           onPressed: () => context.pop(),
         ).animate().fadeIn(delay: 240.ms, duration: 400.ms),

@@ -3,6 +3,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_spacing.dart';
+import '../constants/app_strings.dart';
 import '../theme/app_text_styles.dart';
 
 /// KAST-ROLZ's luxury search field — gold accent on focus, a clear button
@@ -11,7 +12,7 @@ class KrSearchBar extends StatefulWidget {
   const KrSearchBar({
     super.key,
     this.controller,
-    this.hintText = 'Search…',
+    this.hintText,
     this.onChanged,
     this.onSubmitted,
     this.onTap,
@@ -24,7 +25,7 @@ class KrSearchBar extends StatefulWidget {
   });
 
   final TextEditingController? controller;
-  final String hintText;
+  final String? hintText;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final VoidCallback? onTap;
@@ -117,7 +118,7 @@ class _KrSearchBarState extends State<KrSearchBar> {
                     cursorColor: AppColors.gold,
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                      hintText: widget.hintText,
+                      hintText: widget.hintText ?? AppStrings.searchEllipsis,
                       hintStyle: AppTextStyles.hint,
                       filled: false,
                       border: InputBorder.none,

@@ -2,19 +2,21 @@
 /// display-label extensions so the UI layer never has to hardcode strings.
 library;
 
+import '../../core/constants/app_strings.dart';
+
 enum UserRole { talent, recruiter, admin, guest }
 
 extension UserRoleX on UserRole {
   String get label {
     switch (this) {
       case UserRole.talent:
-        return 'Talent';
+        return AppStrings.roleTalentLabel;
       case UserRole.recruiter:
-        return 'Recruiter';
+        return AppStrings.roleRecruiterLabel;
       case UserRole.admin:
-        return 'Admin';
+        return AppStrings.roleAdminLabel;
       case UserRole.guest:
-        return 'Guest';
+        return AppStrings.roleGuestLabel;
     }
   }
 }
@@ -35,23 +37,23 @@ extension TalentCategoryX on TalentCategory {
   String get label {
     switch (this) {
       case TalentCategory.actor:
-        return 'Actor';
+        return AppStrings.catActor;
       case TalentCategory.actress:
-        return 'Actress';
+        return AppStrings.catActress;
       case TalentCategory.model:
-        return 'Model';
+        return AppStrings.catModel;
       case TalentCategory.extra:
-        return 'Extra';
+        return AppStrings.catExtra;
       case TalentCategory.voiceActor:
-        return 'Voice Actor';
+        return AppStrings.catVoiceActor;
       case TalentCategory.dancer:
-        return 'Dancer';
+        return AppStrings.catDancer;
       case TalentCategory.musician:
-        return 'Musician';
+        return AppStrings.catMusician;
       case TalentCategory.contentCreator:
-        return 'Content Creator';
+        return AppStrings.catContentCreator;
       case TalentCategory.photographer:
-        return 'Photographer';
+        return AppStrings.catPhotographer;
     }
   }
 }
@@ -62,13 +64,13 @@ extension GenderX on Gender {
   String get label {
     switch (this) {
       case Gender.male:
-        return 'Male';
+        return AppStrings.genderMale;
       case Gender.female:
-        return 'Female';
+        return AppStrings.genderFemale;
       case Gender.nonBinary:
-        return 'Non-binary';
+        return AppStrings.genderNonBinary;
       case Gender.other:
-        return 'Other';
+        return AppStrings.genderOther;
     }
   }
 }
@@ -79,11 +81,11 @@ extension AvailabilityStatusX on AvailabilityStatus {
   String get label {
     switch (this) {
       case AvailabilityStatus.available:
-        return 'Available';
+        return AppStrings.availAvailable;
       case AvailabilityStatus.busy:
-        return 'Busy';
+        return AppStrings.availBusy;
       case AvailabilityStatus.limited:
-        return 'Limited';
+        return AppStrings.availLimited;
     }
   }
 }
@@ -94,15 +96,15 @@ extension CastingStatusX on CastingStatus {
   String get label {
     switch (this) {
       case CastingStatus.open:
-        return 'Open';
+        return AppStrings.statusOpen;
       case CastingStatus.closed:
-        return 'Closed';
+        return AppStrings.statusClosed;
       case CastingStatus.filled:
-        return 'Filled';
+        return AppStrings.statusFilled;
       case CastingStatus.draft:
-        return 'Draft';
+        return AppStrings.statusDraft;
       case CastingStatus.archived:
-        return 'Archived';
+        return AppStrings.statusArchived;
     }
   }
 }
@@ -113,15 +115,15 @@ extension ApplicationStatusX on ApplicationStatus {
   String get label {
     switch (this) {
       case ApplicationStatus.pending:
-        return 'Pending';
+        return AppStrings.appPending;
       case ApplicationStatus.accepted:
-        return 'Accepted';
+        return AppStrings.appAccepted;
       case ApplicationStatus.rejected:
-        return 'Rejected';
+        return AppStrings.appRejected;
       case ApplicationStatus.withdrawn:
-        return 'Withdrawn';
+        return AppStrings.appWithdrawn;
       case ApplicationStatus.shortlisted:
-        return 'Shortlisted';
+        return AppStrings.appShortlisted;
     }
   }
 }
@@ -141,21 +143,21 @@ extension NotificationTypeX on NotificationType {
   String get label {
     switch (this) {
       case NotificationType.like:
-        return 'Like';
+        return AppStrings.notifLike;
       case NotificationType.application:
-        return 'Application';
+        return AppStrings.notifApplication;
       case NotificationType.acceptance:
-        return 'Acceptance';
+        return AppStrings.notifAcceptance;
       case NotificationType.rejection:
-        return 'Rejection';
+        return AppStrings.notifRejection;
       case NotificationType.message:
-        return 'Message';
+        return AppStrings.notifMessage;
       case NotificationType.reminder:
-        return 'Reminder';
+        return AppStrings.notifReminder;
       case NotificationType.verification:
-        return 'Verification';
+        return AppStrings.notifVerification;
       case NotificationType.system:
-        return 'System';
+        return AppStrings.notifSystem;
     }
   }
 }
@@ -166,13 +168,13 @@ extension MessageTypeX on MessageType {
   String get label {
     switch (this) {
       case MessageType.text:
-        return 'Text';
+        return AppStrings.msgTypeText;
       case MessageType.image:
-        return 'Image';
+        return AppStrings.msgTypeImage;
       case MessageType.voice:
-        return 'Voice';
+        return AppStrings.msgTypeVoice;
       case MessageType.system:
-        return 'System';
+        return AppStrings.msgTypeSystem;
     }
   }
 }
@@ -183,13 +185,13 @@ extension ExperienceLevelX on ExperienceLevel {
   String get label {
     switch (this) {
       case ExperienceLevel.beginner:
-        return 'Beginner';
+        return AppStrings.expBeginner;
       case ExperienceLevel.intermediate:
-        return 'Intermediate';
+        return AppStrings.expIntermediate;
       case ExperienceLevel.professional:
-        return 'Professional';
+        return AppStrings.expProfessional;
       case ExperienceLevel.celebrity:
-        return 'Celebrity';
+        return AppStrings.expCelebrity;
     }
   }
 }
@@ -200,11 +202,11 @@ extension ReportStatusX on ReportStatus {
   String get label {
     switch (this) {
       case ReportStatus.pending:
-        return 'Pending';
+        return AppStrings.reportPending;
       case ReportStatus.resolved:
-        return 'Resolved';
+        return AppStrings.reportResolved;
       case ReportStatus.dismissed:
-        return 'Dismissed';
+        return AppStrings.reportDismissed;
     }
   }
 }
@@ -215,13 +217,13 @@ extension UserStatusX on UserStatus {
   String get label {
     switch (this) {
       case UserStatus.active:
-        return 'Active';
+        return AppStrings.userActive;
       case UserStatus.banned:
-        return 'Banned';
+        return AppStrings.userBanned;
       case UserStatus.pendingVerification:
-        return 'Pending Verification';
+        return AppStrings.userPendingVerification;
       case UserStatus.suspended:
-        return 'Suspended';
+        return AppStrings.userSuspended;
     }
   }
 }
@@ -233,17 +235,17 @@ extension CompanyTypeX on CompanyType {
   String get label {
     switch (this) {
       case CompanyType.director:
-        return 'Director';
+        return AppStrings.companyDirector;
       case CompanyType.producer:
-        return 'Producer';
+        return AppStrings.companyProducer;
       case CompanyType.castingDirector:
-        return 'Casting Director';
+        return AppStrings.companyCastingDirector;
       case CompanyType.agency:
-        return 'Agency';
+        return AppStrings.companyAgency;
       case CompanyType.brand:
-        return 'Brand';
+        return AppStrings.companyBrand;
       case CompanyType.studio:
-        return 'Studio';
+        return AppStrings.companyStudio;
     }
   }
 }
@@ -256,21 +258,21 @@ extension CastingTypeX on CastingType {
   String get label {
     switch (this) {
       case CastingType.film:
-        return 'Film';
+        return AppStrings.castingTypeFilm;
       case CastingType.tv:
-        return 'TV';
+        return AppStrings.castingTypeTv;
       case CastingType.commercial:
-        return 'Commercial';
+        return AppStrings.castingTypeCommercial;
       case CastingType.theater:
-        return 'Theater';
+        return AppStrings.castingTypeTheater;
       case CastingType.voiceOver:
-        return 'Voice Over';
+        return AppStrings.castingTypeVoiceOver;
       case CastingType.fashion:
-        return 'Fashion';
+        return AppStrings.castingTypeFashion;
       case CastingType.musicVideo:
-        return 'Music Video';
+        return AppStrings.castingTypeMusicVideo;
       case CastingType.other:
-        return 'Other';
+        return AppStrings.castingTypeOther;
     }
   }
 }
@@ -282,11 +284,11 @@ extension FavoriteItemTypeX on FavoriteItemType {
   String get label {
     switch (this) {
       case FavoriteItemType.talent:
-        return 'Talent';
+        return AppStrings.favTalent;
       case FavoriteItemType.casting:
-        return 'Casting';
+        return AppStrings.favCasting;
       case FavoriteItemType.agency:
-        return 'Agency';
+        return AppStrings.favAgency;
     }
   }
 }
@@ -298,17 +300,17 @@ extension ReportTargetTypeX on ReportTargetType {
   String get label {
     switch (this) {
       case ReportTargetType.user:
-        return 'User';
+        return AppStrings.reportTargetUser;
       case ReportTargetType.talent:
-        return 'Talent';
+        return AppStrings.reportTargetTalent;
       case ReportTargetType.recruiter:
-        return 'Recruiter';
+        return AppStrings.reportTargetRecruiter;
       case ReportTargetType.casting:
-        return 'Casting';
+        return AppStrings.reportTargetCasting;
       case ReportTargetType.message:
-        return 'Message';
+        return AppStrings.reportTargetMessage;
       case ReportTargetType.review:
-        return 'Review';
+        return AppStrings.reportTargetReview;
     }
   }
 }

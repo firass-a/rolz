@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/widgets.dart';
@@ -37,45 +39,49 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Search', showBackButton: false),
+      appBar: CustomAppBar(title: AppStrings.navSearch, showBackButton: false),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.md),
             child: KrSearchBar(
               controller: _controller,
-              hintText: 'Search talents, castings, agencies…',
+              hintText: AppStrings.searchTalentsCastingsAgencies,
               autofocus: true,
               onChanged: (value) => ref.read(globalSearchProvider.notifier).search(value),
             ),
           ),
           Expanded(
             child: search.query.isEmpty
-                ? const Center(
+                ? Center(
                     child: EmptyState(
                       icon: Iconsax.search_normal,
-                      title: 'Search KAST-ROLZ',
-                      subtitle: 'Find talents, castings, recruiters and agencies in one place.',
+                      title: AppStrings.searchKastRolz,
+                      subtitle: AppStrings.searchKastRolzSubtitle,
                     ),
                   )
                 : !search.hasResults
-                    ? const Center(
+                    ? Center(
                         child: EmptyState(
                           icon: Iconsax.search_normal_1,
-                          title: 'No Results Found',
-                          subtitle: 'Try a different name, role or city.',
+                          title: AppStrings.emptySearchTitle,
+                          subtitle: AppStrings.tryDifferentSearch,
                         ),
                       )
                     : ListView(
                         padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxl),
                         children: [
                           if (search.talents.isNotEmpty) ...[
-                            KrSectionHeader(title: 'Talents', subtitle: '${search.talents.length} found', actionLabel: null),
+                            KrSectionHeader(
+                              title: AppStrings.talents,
+                              subtitle: AppStrings.foundCount(search.talents.length),
+                              actionLabel: null,
+                            ),
                             ...search.talents.map((t) => KrTalentCard(
                                   name: t.fullName,
                                   imageUrl: t.headshotUrl,
                                   category: t.category.label,
-                                  city: t.city,
+                                  city: DisplayLocalizer.t(t.city),
                                   verified: t.isVerified,
                                   rating: t.rating,
                                   variant: KrTalentCardVariant.list,
@@ -84,11 +90,15 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
                             const SizedBox(height: AppSpacing.lg),
                           ],
                           if (search.castings.isNotEmpty) ...[
-                            KrSectionHeader(title: 'Castings', subtitle: '${search.castings.length} found', actionLabel: null),
+                            KrSectionHeader(
+                              title: AppStrings.castings,
+                              subtitle: AppStrings.foundCount(search.castings.length),
+                              actionLabel: null,
+                            ),
                             ...search.castings.map((c) => KrCastingCard(
-                                  title: c.title,
+                                  title: DisplayLocalizer.t(c.title),
                                   bannerUrl: c.bannerUrl,
-                                  role: c.role,
+                                  role: DisplayLocalizer.t(c.role),
                                   location: c.locationLabel,
                                   salaryLabel: Formatters.formatSalary(c.salary, currency: c.currency),
                                   onTap: () => context.push(RouteNames.castingDetailPath(c.id)),
@@ -96,11 +106,15 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
                             const SizedBox(height: AppSpacing.lg),
                           ],
                           if (search.agencies.isNotEmpty) ...[
-                            KrSectionHeader(title: 'Agencies', subtitle: '${search.agencies.length} found', actionLabel: null),
+                            KrSectionHeader(
+                              title: AppStrings.agencies,
+                              subtitle: AppStrings.foundCount(search.agencies.length),
+                              actionLabel: null,
+                            ),
                             ...search.agencies.map((a) => KrAgencyCard(
                                   name: a.name,
                                   logoUrl: a.logoUrl,
-                                  location: a.city,
+                                  location: DisplayLocalizer.t(a.city),
                                   verified: a.isVerified,
                                   talentCount: a.talentCount,
                                   onTap: () => context.push(RouteNames.agencyDetailPath(a.id)),

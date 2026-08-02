@@ -19,23 +19,23 @@ class _OnboardPage {
   final String body;
 }
 
-const _pages = [
-  _OnboardPage(
-    icon: Iconsax.discover,
-    title: AppStrings.onboardTitle1,
-    body: AppStrings.onboardBody1,
-  ),
-  _OnboardPage(
-    icon: Iconsax.camera,
-    title: AppStrings.onboardTitle2,
-    body: AppStrings.onboardBody2,
-  ),
-  _OnboardPage(
-    icon: Iconsax.shield_tick,
-    title: AppStrings.onboardTitle3,
-    body: AppStrings.onboardBody3,
-  ),
-];
+List<_OnboardPage> get _pages => [
+      _OnboardPage(
+        icon: Iconsax.discover,
+        title: AppStrings.onboardTitle1,
+        body: AppStrings.onboardBody1,
+      ),
+      _OnboardPage(
+        icon: Iconsax.camera,
+        title: AppStrings.onboardTitle2,
+        body: AppStrings.onboardBody2,
+      ),
+      _OnboardPage(
+        icon: Iconsax.shield_tick,
+        title: AppStrings.onboardTitle3,
+        body: AppStrings.onboardBody3,
+      ),
+    ];
 
 /// Three-page introduction to KAST-ROLZ: discover opportunities, get
 /// discovered/post castings, book roles with confidence. Finishing the
@@ -80,19 +80,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-                child: TextButton(
-                  onPressed: _isLast ? null : _finish,
-                  child: Text(
-                    AppStrings.skip,
-                    style: AppTextStyles.buttonSmall.copyWith(
-                      color: _isLast ? Colors.transparent : AppColors.textSecondary,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+              child: Row(
+                children: [
+                  const KrLogo(size: 36),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: _isLast ? null : _finish,
+                    child: Text(
+                      AppStrings.skip,
+                      style: AppTextStyles.buttonSmall.copyWith(
+                        color: _isLast ? Colors.transparent : AppColors.textSecondary,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
             Expanded(

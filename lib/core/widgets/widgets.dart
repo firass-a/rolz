@@ -16,6 +16,7 @@ export 'kr_error_state.dart';
 export 'kr_filter_chip.dart';
 export 'kr_glass.dart';
 export 'kr_loading.dart';
+export 'kr_logo.dart';
 export 'kr_network_image.dart';
 export 'kr_search_bar.dart';
 export 'kr_section_header.dart';

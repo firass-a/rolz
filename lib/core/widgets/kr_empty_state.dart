@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_spacing.dart';
+import '../constants/app_strings.dart';
 import '../theme/app_text_styles.dart';
 import 'kr_button.dart';
 
@@ -13,7 +14,7 @@ class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
     this.icon = Iconsax.box,
-    this.title = 'Nothing Here Yet',
+    this.title,
     this.subtitle,
     this.ctaLabel,
     this.onCtaTap,
@@ -21,7 +22,7 @@ class EmptyState extends StatelessWidget {
   });
 
   final IconData icon;
-  final String title;
+  final String? title;
   final String? subtitle;
   final String? ctaLabel;
   final VoidCallback? onCtaTap;
@@ -29,6 +30,8 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedTitle = title ?? AppStrings.emptyGenericTitle;
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.xl,
@@ -69,7 +72,7 @@ class EmptyState extends StatelessWidget {
               ),
           SizedBox(height: compact ? AppSpacing.md : AppSpacing.lg),
           Text(
-            title,
+            resolvedTitle,
             textAlign: TextAlign.center,
             style: AppTextStyles.sectionTitle.copyWith(fontSize: compact ? 20 : 24),
           ).animate().fadeIn(delay: 100.ms, duration: 400.ms),

@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -76,7 +77,7 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
     final user = ref.read(currentUserProvider);
     final recruiter = user == null ? null : ref.read(recruiterByUserIdProvider(user.id));
     if (recruiter == null) {
-      context.showSnack('Only recruiter accounts can post castings.', isError: true);
+      context.showSnack(AppStrings.onlyRecruiterCanPost, isError: true);
       return;
     }
 
@@ -108,7 +109,7 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
 
     if (!mounted) return;
     setState(() => _submitting = false);
-    context.showSnack('Casting published successfully!');
+    context.showSnack(AppStrings.castingPublished);
     context.go(RouteNames.castings);
   }
 
@@ -116,7 +117,7 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Post a Casting', showBackButton: false),
+      appBar: CustomAppBar(title: AppStrings.postACasting, showBackButton: false),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xxl),
@@ -126,19 +127,19 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Reach thousands of verified talents across the region.',
+                  AppStrings.postCastingSubtitle,
                   style: AppTextStyles.bodyMuted,
                 ).animate().fadeIn(duration: 400.ms),
                 const SizedBox(height: AppSpacing.xl),
-                _Field(label: 'Casting Title', controller: _titleController, hint: 'e.g. Lead Actress — Feature Film'),
+                _Field(label: AppStrings.castingTitle, controller: _titleController, hint: AppStrings.castingTitleHint),
                 const SizedBox(height: AppSpacing.lg),
-                _Field(label: 'Role', controller: _roleController, hint: 'e.g. Lead role, supporting role…'),
+                _Field(label: AppStrings.castingRole, controller: _roleController, hint: AppStrings.roleHint),
                 const SizedBox(height: AppSpacing.lg),
                 Row(
                   children: [
                     Expanded(
                       child: _Dropdown<TalentCategory>(
-                        label: 'Category',
+                        label: AppStrings.category,
                         value: _category,
                         items: TalentCategory.values,
                         labelOf: (c) => c.label,
@@ -148,7 +149,7 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: _Dropdown<CastingType>(
-                        label: 'Type',
+                        label: AppStrings.type,
                         value: _type,
                         items: CastingType.values,
                         labelOf: (c) => c.label,
@@ -161,12 +162,12 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: _Field(label: 'City', controller: _cityController, hint: 'Algiers'),
+                      child: _Field(label: AppStrings.city, controller: _cityController, hint: AppStrings.cityHint),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: _Field(
-                        label: 'Salary (optional)',
+                        label: AppStrings.salaryOptional,
                         controller: _salaryController,
                         hint: '80000',
                         keyboardType: TextInputType.number,
@@ -175,7 +176,7 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                Text('Application Deadline', style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
+                Text(AppStrings.applicationDeadline, style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
                 const SizedBox(height: 6),
                 GestureDetector(
                   onTap: _pickDeadline,
@@ -199,14 +200,14 @@ class _PostCastingScreenState extends ConsumerState<PostCastingScreen> {
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 _Field(
-                  label: 'Description',
+                  label: AppStrings.description,
                   controller: _descriptionController,
-                  hint: 'Describe the role, requirements and shoot details…',
+                  hint: AppStrings.castingDescriptionHint,
                   maxLines: 5,
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 PremiumButton.primary(
-                  label: 'Publish Casting',
+                  label: AppStrings.publishCasting,
                   fullWidth: true,
                   isLoading: _submitting,
                   icon: Iconsax.send_2,
@@ -249,7 +250,7 @@ class _Field extends StatelessWidget {
           keyboardType: keyboardType,
           style: AppTextStyles.input,
           decoration: InputDecoration(hintText: hint),
-          validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+          validator: (v) => (v == null || v.trim().isEmpty) ? AppStrings.required : null,
         ),
       ],
     );

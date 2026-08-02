@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../core/l10n/display_localizer.dart';
+import '../../core/l10n/locale_controller.dart';
 import 'enums.dart';
 
 /// A recruiter (director, producer, casting director, agency, brand or
@@ -51,7 +53,10 @@ class RecruiterModel extends Equatable {
 
   String get fullName => '$firstName $lastName'.trim();
 
-  String get locationLabel => '$city, $country';
+  String get locationLabel {
+    final sep = LocaleController.isArabic ? '، ' : ', ';
+    return '${DisplayLocalizer.t(city)}$sep${DisplayLocalizer.t(country)}';
+  }
 
   RecruiterModel copyWith({
     String? id,

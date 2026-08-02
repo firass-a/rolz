@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../shared/models/models.dart';
@@ -25,36 +26,36 @@ class _ShellTab {
 // Branch order in app_router.dart:
 // 0 home · 1 discover · 2 castings · 3 dashboard · 4 search · 5 post-casting
 // 6 messages · 7 profile.
-const _talentTabs = [
-  _ShellTab(branchIndex: 0, icon: Iconsax.home_2, label: 'Home'),
-  _ShellTab(branchIndex: 1, icon: Iconsax.discover, label: 'Discover'),
-  _ShellTab(branchIndex: 2, icon: Iconsax.briefcase, label: 'Castings'),
-  _ShellTab(branchIndex: 6, icon: Iconsax.message, label: 'Messages'),
-  _ShellTab(branchIndex: 7, icon: Iconsax.user, label: 'Profile'),
-];
+List<_ShellTab> get _talentTabs => [
+      _ShellTab(branchIndex: 0, icon: Iconsax.home_2, label: AppStrings.navHome),
+      _ShellTab(branchIndex: 1, icon: Iconsax.discover, label: AppStrings.navDiscover),
+      _ShellTab(branchIndex: 2, icon: Iconsax.briefcase, label: AppStrings.navCastings),
+      _ShellTab(branchIndex: 6, icon: Iconsax.message, label: AppStrings.navMessages),
+      _ShellTab(branchIndex: 7, icon: Iconsax.user, label: AppStrings.navProfile),
+    ];
 
-const _recruiterTabs = [
-  _ShellTab(branchIndex: 3, icon: Iconsax.home_2, label: 'Dashboard'),
-  _ShellTab(branchIndex: 4, icon: Iconsax.search_normal, label: 'Search'),
-  _ShellTab(branchIndex: 5, icon: Iconsax.add_circle, label: 'Post'),
-  _ShellTab(branchIndex: 6, icon: Iconsax.message, label: 'Messages'),
-  _ShellTab(branchIndex: 7, icon: Iconsax.user, label: 'Profile'),
-];
+List<_ShellTab> get _recruiterTabs => [
+      _ShellTab(branchIndex: 3, icon: Iconsax.home_2, label: AppStrings.navDashboard),
+      _ShellTab(branchIndex: 4, icon: Iconsax.search_normal, label: AppStrings.navTalent),
+      _ShellTab(branchIndex: 5, icon: Iconsax.add_circle, label: AppStrings.navPost),
+      _ShellTab(branchIndex: 6, icon: Iconsax.message, label: AppStrings.navMessages),
+      _ShellTab(branchIndex: 7, icon: Iconsax.user, label: AppStrings.navProfile),
+    ];
 
-const _adminTabs = [
-  _ShellTab(branchIndex: 0, icon: Iconsax.chart_2, label: 'Overview'),
-  _ShellTab(branchIndex: 1, icon: Iconsax.people, label: 'Users'),
-  _ShellTab(branchIndex: 2, icon: Iconsax.briefcase, label: 'Castings'),
-  _ShellTab(branchIndex: 6, icon: Iconsax.message, label: 'Messages'),
-  _ShellTab(branchIndex: 7, icon: Iconsax.user, label: 'Profile'),
-];
+List<_ShellTab> get _adminTabs => [
+      _ShellTab(branchIndex: 0, icon: Iconsax.chart_2, label: AppStrings.navOverview),
+      _ShellTab(branchIndex: 1, icon: Iconsax.people, label: AppStrings.navUsers),
+      _ShellTab(branchIndex: 2, icon: Iconsax.briefcase, label: AppStrings.navCastings),
+      _ShellTab(branchIndex: 6, icon: Iconsax.message, label: AppStrings.navMessages),
+      _ShellTab(branchIndex: 7, icon: Iconsax.user, label: AppStrings.navProfile),
+    ];
 
-const _guestTabs = [
-  _ShellTab(branchIndex: 0, icon: Iconsax.home_2, label: 'Home'),
-  _ShellTab(branchIndex: 1, icon: Iconsax.discover, label: 'Discover'),
-  _ShellTab(branchIndex: 2, icon: Iconsax.briefcase, label: 'Castings'),
-  _ShellTab(branchIndex: 7, icon: Iconsax.user, label: 'Profile'),
-];
+List<_ShellTab> get _guestTabs => [
+      _ShellTab(branchIndex: 0, icon: Iconsax.home_2, label: AppStrings.navHome),
+      _ShellTab(branchIndex: 1, icon: Iconsax.discover, label: AppStrings.navDiscover),
+      _ShellTab(branchIndex: 2, icon: Iconsax.briefcase, label: AppStrings.navCastings),
+      _ShellTab(branchIndex: 7, icon: Iconsax.user, label: AppStrings.navProfile),
+    ];
 
 List<_ShellTab> _tabsFor(UserRole? role) {
   switch (role) {
@@ -136,7 +137,7 @@ class _KrBottomNav extends StatelessWidget {
             children: List.generate(tabs.length, (index) {
               final tab = tabs[index];
               final selected = index == currentIndex;
-              final showBadge = tab.label == 'Messages' && unreadMessages > 0;
+              final showBadge = tab.branchIndex == 6 && unreadMessages > 0;
               return Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,

@@ -1,25 +1,30 @@
 import 'package:intl/intl.dart';
 
+import '../constants/app_strings.dart';
+
 /// Small, dependency-free formatting helpers shared across every screen
 /// that displays talent, casting or agency data.
+///
+/// Number/date digits always stay Latin (en patterns). Word labels go through
+/// [AppStrings] so they follow the active language.
 abstract final class Formatters {
   static final NumberFormat _compactCurrency = NumberFormat.compactCurrency(
+    locale: 'en',
     decimalDigits: 0,
     symbol: '',
   );
 
-  static final NumberFormat _thousands = NumberFormat.decimalPattern();
+  static final NumberFormat _thousands = NumberFormat.decimalPattern('en');
 
   /// Formats a salary/budget value with a currency code, e.g.
   /// `formatSalary(150000, currency: 'DZD')` -> "150,000 DZD".
-  /// Large values are compacted, e.g. `formatSalary(2500000)` -> "2.5M DZD".
   static String formatSalary(
     num? amount, {
     String currency = 'DZD',
     bool compact = false,
   }) {
-    if (amount == null) return 'Undisclosed';
-    if (amount <= 0) return 'Unpaid / TFP';
+    if (amount == null) return AppStrings.undisclosed;
+    if (amount <= 0) return AppStrings.unpaidTfp;
     final value = compact ? _compactCurrency.format(amount) : _thousands.format(amount);
     return '$value $currency';
   }
@@ -31,20 +36,19 @@ abstract final class Formatters {
     num? max, {
     String currency = 'DZD',
   }) {
-    if (min == null && max == null) return 'Undisclosed';
+    if (min == null && max == null) return AppStrings.undisclosed;
     if (min != null && max != null) {
       if (min == max) return formatSalary(min, currency: currency);
       return '${_thousands.format(min)} – ${_thousands.format(max)} $currency';
     }
     final value = min ?? max;
-    return 'From ${formatSalary(value, currency: currency)}';
+    return AppStrings.fromSalaryAmount(formatSalary(value, currency: currency));
   }
 
   /// Formats height in centimeters, e.g. `formatHeight(178)` -> '178 cm'.
-  /// Returns an em dash when unknown.
   static String formatHeight(num? cm) {
     if (cm == null || cm <= 0) return '—';
-    return '${cm.round()} cm';
+    return '${cm.round()} ${AppStrings.unitCm}';
   }
 
   /// Converts centimeters to a feet/inches label, e.g. 178 -> `5'10"`.
@@ -59,18 +63,18 @@ abstract final class Formatters {
   /// Formats a single age, e.g. `formatAge(24)` -> "24 yrs".
   static String formatAge(int? age) {
     if (age == null || age <= 0) return '—';
-    return '$age yrs';
+    return '$age ${AppStrings.yrsSuffix}';
   }
 
   /// Formats an age range, e.g. `formatAgeRange(18, 25)` -> "18–25 yrs".
   static String formatAgeRange(int? min, int? max) {
-    if (min == null && max == null) return 'Any age';
+    if (min == null && max == null) return AppStrings.anyAge;
     if (min != null && max != null) {
       if (min == max) return formatAge(min);
-      return '$min–$max yrs';
+      return '$min–$max ${AppStrings.yrsSuffix}';
     }
-    if (min != null) return '$min+ yrs';
-    return 'Up to $max yrs';
+    if (min != null) return '$min+ ${AppStrings.yrsSuffix}';
+    return AppStrings.upToAgeValue(max!);
   }
 
   /// Computes age in years from a birth date.
@@ -83,32 +87,31 @@ abstract final class Formatters {
     return age;
   }
 
-  /// Standard medium date, e.g. "27 Jul 2026".
+  /// Standard medium date with Latin digits, e.g. "27 Jul 2026".
   static String formatDate(DateTime? date) {
     if (date == null) return '—';
-    return DateFormat('d MMM y').format(date);
+    return DateFormat('d MMM y', 'en').format(date);
   }
 
-  /// Date + time, e.g. "27 Jul 2026, 14:32".
+  /// Date + time with Latin digits, e.g. "27 Jul 2026, 14:32".
   static String formatDateTime(DateTime? date) {
     if (date == null) return '—';
-    return DateFormat('d MMM y, HH:mm').format(date);
+    return DateFormat('d MMM y, HH:mm', 'en').format(date);
   }
 
-  /// Deadline label with urgency awareness, e.g. "Closes in 3 days",
-  /// "Closes today", "Closed 2 days ago".
+  /// Deadline label with urgency awareness.
   static String formatDeadline(DateTime? deadline) {
-    if (deadline == null) return 'No deadline';
+    if (deadline == null) return AppStrings.noDeadline;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final due = DateTime(deadline.year, deadline.month, deadline.day);
     final days = due.difference(today).inDays;
 
-    if (days < 0) return 'Closed ${(-days)}d ago';
-    if (days == 0) return 'Closes today';
-    if (days == 1) return 'Closes tomorrow';
-    if (days <= 30) return 'Closes in $days days';
-    return 'Closes ${formatDate(deadline)}';
+    if (days < 0) return AppStrings.closedDaysAgo(-days);
+    if (days == 0) return AppStrings.closesToday;
+    if (days == 1) return AppStrings.closesTomorrow;
+    if (days <= 30) return AppStrings.closesInDays(days);
+    return AppStrings.closesOn(formatDate(deadline));
   }
 
   /// Formats a generic count with K/M suffixes, e.g. 1200 -> "1.2K".
@@ -124,13 +127,13 @@ abstract final class Formatters {
 
   /// Formats a rating value to a single decimal, e.g. 4.567 -> "4.6".
   static String formatRating(num? rating) {
-    if (rating == null) return 'New';
+    if (rating == null) return AppStrings.ratingNew;
     return rating.toStringAsFixed(1);
   }
 
   /// Formats a distance in kilometers, e.g. 3.2 -> "3.2 km", 0.4 -> "400 m".
   static String formatDistance(double km) {
-    if (km < 1) return '${(km * 1000).round()} m';
-    return '${km.toStringAsFixed(1)} km';
+    if (km < 1) return '${(km * 1000).round()} ${AppStrings.unitM}';
+    return '${km.toStringAsFixed(1)} ${AppStrings.unitKm}';
   }
 }

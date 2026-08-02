@@ -60,37 +60,46 @@ Future<T?> showKrBottomSheet<T>(
 /// two stacked buttons (confirm + cancel). Use for delete, ban, logout,
 /// or any irreversible action that deserves a second thought.
 class ConfirmationSheet extends StatelessWidget {
-  const ConfirmationSheet({
+  ConfirmationSheet({
     super.key,
     required this.title,
     required this.body,
     this.icon = Iconsax.warning_2,
-    this.confirmLabel = AppStrings.confirm,
-    this.cancelLabel = AppStrings.cancel,
+    String? confirmLabel,
+    String? cancelLabel,
     this.isDanger = true,
     this.onConfirm,
-  });
+  })  : confirmLabel = confirmLabel ?? AppStrings.confirm,
+        cancelLabel = cancelLabel ?? AppStrings.cancel;
 
   /// Convenience preset for delete confirmations.
-  const ConfirmationSheet.delete({
+  ConfirmationSheet.delete({
     super.key,
-    this.title = AppStrings.confirmDeleteTitle,
-    this.body = AppStrings.confirmDeleteBody,
-    this.confirmLabel = AppStrings.delete,
-    this.cancelLabel = AppStrings.cancel,
+    String? title,
+    String? body,
+    String? confirmLabel,
+    String? cancelLabel,
     this.onConfirm,
-  })  : icon = Iconsax.trash,
+  })  : title = title ?? AppStrings.confirmDeleteTitle,
+        body = body ?? AppStrings.confirmDeleteBody,
+        confirmLabel = confirmLabel ?? AppStrings.delete,
+        cancelLabel = cancelLabel ?? AppStrings.cancel,
+        icon = Iconsax.trash,
         isDanger = true;
 
   /// Convenience preset for banning a user.
-  const ConfirmationSheet.ban({
+  ConfirmationSheet.ban({
     super.key,
-    this.title = AppStrings.confirmBanTitle,
-    this.body = AppStrings.confirmBanBody,
-    this.confirmLabel = 'Ban User',
-    this.cancelLabel = AppStrings.cancel,
+    String? title,
+    String? body,
+    String? confirmLabel,
+    String? cancelLabel,
     this.onConfirm,
-  })  : icon = Iconsax.shield_cross,
+  })  : title = title ?? AppStrings.confirmBanTitle,
+        body = body ?? AppStrings.confirmBanBody,
+        confirmLabel = confirmLabel ?? AppStrings.banUser,
+        cancelLabel = cancelLabel ?? AppStrings.cancel,
+        icon = Iconsax.shield_cross,
         isDanger = true;
 
   final String title;
@@ -108,8 +117,8 @@ class ConfirmationSheet extends StatelessWidget {
     required String title,
     required String body,
     IconData icon = Iconsax.warning_2,
-    String confirmLabel = AppStrings.confirm,
-    String cancelLabel = AppStrings.cancel,
+    String? confirmLabel,
+    String? cancelLabel,
     bool isDanger = true,
   }) async {
     final result = await showKrBottomSheet<bool>(

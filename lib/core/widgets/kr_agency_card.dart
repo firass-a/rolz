@@ -3,6 +3,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_spacing.dart';
+import '../constants/app_strings.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/formatters.dart';
 import 'kr_badge.dart';
@@ -114,7 +115,7 @@ class KrAgencyCard extends StatelessWidget {
                   _StatChip(
                     icon: Iconsax.profile_2user,
                     value: Formatters.formatCount(talentCount!),
-                    label: 'Talents',
+                    label: AppStrings.talents,
                   ),
                 if (talentCount != null && castingCount != null)
                   const SizedBox(width: AppSpacing.lg),
@@ -122,7 +123,7 @@ class KrAgencyCard extends StatelessWidget {
                   _StatChip(
                     icon: Iconsax.briefcase,
                     value: Formatters.formatCount(castingCount!),
-                    label: 'Castings',
+                    label: AppStrings.castings,
                   ),
               ],
             ),

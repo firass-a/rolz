@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../core/l10n/display_localizer.dart';
+import '../../core/l10n/locale_controller.dart';
 import 'enums.dart';
 
 /// A single line of a talent's résumé, e.g. a film credit or a stage role.
@@ -130,7 +132,10 @@ class TalentModel extends Equatable {
     return '$f$l'.toUpperCase();
   }
 
-  String get locationLabel => '$city, $country';
+  String get locationLabel {
+    final sep = LocaleController.isArabic ? '، ' : ', ';
+    return '${DisplayLocalizer.t(city)}$sep${DisplayLocalizer.t(country)}';
+  }
 
   String get heightDisplay => '${heightCm.toStringAsFixed(0)} cm';
 

@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -79,7 +81,9 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 0),
                 sliver: SliverToBoxAdapter(
                   child: _Header(
-                    name: auth.isGuest ? 'Guest' : (user?.firstName.isNotEmpty == true ? user!.firstName : 'there'),
+                    name: auth.isGuest
+                        ? AppStrings.guest
+                        : (user?.firstName.isNotEmpty == true ? user!.firstName : AppStrings.there),
                     avatarUrl: user?.avatarUrl,
                     unreadNotifications: unreadNotifs,
                   ),
@@ -98,7 +102,7 @@ class HomeScreen extends ConsumerWidget {
                         child: KrStatCard(
                           icon: Iconsax.send_2,
                           value: applications.isEmpty ? '0' : '${applications.length}',
-                          label: 'Applications',
+                          label: AppStrings.applications,
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -106,7 +110,7 @@ class HomeScreen extends ConsumerWidget {
                         child: KrStatCard(
                           icon: Iconsax.eye,
                           value: talent == null ? '0' : Formatters.formatCount(talent.viewCount),
-                          label: 'Profile Views',
+                          label: AppStrings.profileViews,
                           animateCounter: false,
                         ),
                       ),
@@ -115,7 +119,7 @@ class HomeScreen extends ConsumerWidget {
                         child: KrStatCard(
                           icon: Iconsax.star_1,
                           value: talent == null ? '—' : Formatters.formatRating(talent.rating),
-                          label: 'Rating',
+                          label: AppStrings.rating,
                           animateCounter: false,
                         ),
                       ),
@@ -127,8 +131,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.xxl),
                 sliver: SliverToBoxAdapter(
                   child: KrSectionHeader(
-                    goldLabel: 'Explore by craft',
-                    title: 'Popular Categories',
+                    goldLabel: AppStrings.exploreByCraft,
+                    title: AppStrings.popularCategories,
                   ),
                 ),
               ),
@@ -163,8 +167,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.xl),
                 sliver: SliverToBoxAdapter(
                   child: KrSectionHeader(
-                    goldLabel: 'Rising stars',
-                    title: 'Featured Talents',
+                    goldLabel: AppStrings.risingStars,
+                    title: AppStrings.featuredTalents,
                     onActionTap: () => context.go(RouteNames.discover),
                   ),
                 ),
@@ -173,7 +177,7 @@ class HomeScreen extends ConsumerWidget {
                 child: SizedBox(
                   height: 228,
                   child: featuredTalents.isEmpty
-                      ? const Center(child: Text('No featured talents yet.'))
+                      ? Center(child: Text(AppStrings.noFeaturedTalentsYet))
                       : ListView.separated(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.lg),
@@ -187,7 +191,7 @@ class HomeScreen extends ConsumerWidget {
                                 name: t.fullName,
                                 imageUrl: t.headshotUrl,
                                 category: t.category.label,
-                                city: t.city,
+                                city: DisplayLocalizer.t(t.city),
                                 verified: t.isVerified,
                                 rating: t.rating,
                                 available: t.availability == AvailabilityStatus.available,
@@ -202,8 +206,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
                   child: KrSectionHeader(
-                    goldLabel: 'Curated for you',
-                    title: 'Featured Castings',
+                    goldLabel: AppStrings.curatedForYou,
+                    title: AppStrings.featuredCastings,
                     onActionTap: () => context.go(RouteNames.castings),
                   ),
                 ),
@@ -212,7 +216,7 @@ class HomeScreen extends ConsumerWidget {
                 child: SizedBox(
                   height: 176,
                   child: featuredCastings.isEmpty
-                      ? const Center(child: Text('No featured castings yet.'))
+                      ? Center(child: Text(AppStrings.noFeaturedCastingsYet))
                       : ListView.separated(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.lg),
@@ -224,9 +228,9 @@ class HomeScreen extends ConsumerWidget {
                               width: 260,
                               child: KrCastingCard(
                                 compact: true,
-                                title: casting.title,
+                                title: DisplayLocalizer.t(casting.title),
                                 bannerUrl: casting.bannerUrl,
-                                role: casting.role,
+                                role: DisplayLocalizer.t(casting.role),
                                 location: casting.locationLabel,
                                 salaryLabel: Formatters.formatSalary(casting.salary, currency: casting.currency),
                                 deadline: casting.applicationDeadline,
@@ -243,8 +247,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
                   child: KrSectionHeader(
-                    goldLabel: 'Hot right now',
-                    title: 'Trending Castings',
+                    goldLabel: AppStrings.hotRightNow,
+                    title: AppStrings.trendingCastings,
                     onActionTap: () => context.go(RouteNames.castings),
                   ),
                 ),
@@ -253,7 +257,7 @@ class HomeScreen extends ConsumerWidget {
                 child: SizedBox(
                   height: 176,
                   child: trendingCastings.isEmpty
-                      ? const Center(child: Text('No castings yet.'))
+                      ? Center(child: Text(AppStrings.noCastingsYetShort))
                       : ListView.separated(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.lg),
@@ -265,9 +269,9 @@ class HomeScreen extends ConsumerWidget {
                               width: 260,
                               child: KrCastingCard(
                                 compact: true,
-                                title: casting.title,
+                                title: DisplayLocalizer.t(casting.title),
                                 bannerUrl: casting.bannerUrl,
-                                role: casting.role,
+                                role: DisplayLocalizer.t(casting.role),
                                 location: casting.locationLabel,
                                 salaryLabel: Formatters.formatSalary(casting.salary, currency: casting.currency),
                                 deadline: casting.applicationDeadline,
@@ -284,8 +288,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
                   child: KrSectionHeader(
-                    goldLabel: 'Trusted partners',
-                    title: 'Top Agencies',
+                    goldLabel: AppStrings.trustedPartners,
+                    title: AppStrings.topAgencies,
                     onActionTap: () => context.push(RouteNames.search),
                   ),
                 ),
@@ -305,7 +309,7 @@ class HomeScreen extends ConsumerWidget {
                             return KrAgencyCard(
                               name: agency.name,
                               logoUrl: agency.logoUrl,
-                              location: agency.city,
+                              location: DisplayLocalizer.t(agency.city),
                               verified: agency.isVerified,
                               talentCount: agency.talentCount,
                               width: 220,
@@ -341,7 +345,7 @@ class _Header extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Welcome back,', style: AppTextStyles.bodySmall),
+              Text(AppStrings.welcomeBackComma, style: AppTextStyles.bodySmall),
               Text(
                 name,
                 style: AppTextStyles.cardTitle.copyWith(fontSize: 18, height: 1.2),
@@ -370,20 +374,20 @@ class _HeroCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('YOUR NEXT ROLE AWAITS', style: AppTextStyles.goldLabel),
+          Text(AppStrings.yourNextRoleAwaits, style: AppTextStyles.goldLabel),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Discover Premium\nCasting Calls',
+            AppStrings.discoverPremiumCastingCalls,
             style: AppTextStyles.heroTitleCompact.copyWith(fontSize: 26),
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Curated opportunities from top agencies and productions across the region.',
+            AppStrings.curatedOpportunities,
             style: AppTextStyles.bodyMuted,
           ),
           const SizedBox(height: AppSpacing.lg),
           PremiumButton.primary(
-            label: 'Explore Castings',
+            label: AppStrings.exploreCastings,
             icon: Iconsax.discover,
             onPressed: () => context.go(RouteNames.castings),
           ),

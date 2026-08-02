@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/app_colors.dart';
+import '../constants/app_strings.dart';
+import '../l10n/locale_controller.dart';
 
 /// Quick access to theme pieces + a couple of navigation/snackbar helpers
 /// so screens don't repeat `Theme.of(context)` everywhere.
@@ -133,23 +135,23 @@ extension DateTimeX on DateTime {
     final now = DateTime.now();
     final diff = now.difference(this);
 
-    if (diff.inSeconds < 60) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
-    if (diff.inDays < 30) return '${(diff.inDays / 7).floor()}w ago';
-    if (diff.inDays < 365) return '${(diff.inDays / 30).floor()}mo ago';
-    return '${(diff.inDays / 365).floor()}y ago';
+    if (diff.inSeconds < 60) return AppStrings.justNow;
+    if (diff.inMinutes < 60) return AppStrings.minutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return AppStrings.hoursAgo(diff.inHours);
+    if (diff.inDays < 7) return AppStrings.daysAgo(diff.inDays);
+    if (diff.inDays < 30) return AppStrings.weeksAgo((diff.inDays / 7).floor());
+    if (diff.inDays < 365) return AppStrings.monthsAgo((diff.inDays / 30).floor());
+    return AppStrings.yearsAgo((diff.inDays / 365).floor());
   }
 
-  /// e.g. "27 Jul 2026".
-  String get formattedDate => DateFormat('d MMM y').format(this);
+  /// e.g. "27 Jul 2026" — Latin digits always.
+  String get formattedDate => DateFormat('d MMM y', 'en').format(this);
 
   /// e.g. "27 Jul".
-  String get formattedDayMonth => DateFormat('d MMM').format(this);
+  String get formattedDayMonth => DateFormat('d MMM', 'en').format(this);
 
   /// e.g. "14:32".
-  String get formattedTime => DateFormat('HH:mm').format(this);
+  String get formattedTime => DateFormat('HH:mm', 'en').format(this);
 
   /// Chat-style timestamp: time if today, weekday if this week, else date.
   String get chatTimestamp {
@@ -159,7 +161,7 @@ extension DateTimeX on DateTime {
     if (isToday) return formattedTime;
 
     final diff = now.difference(this).inDays;
-    if (diff < 7) return DateFormat('EEEE').format(this);
+    if (diff < 7) return DateFormat('EEEE', LocaleController.isArabic ? 'ar' : 'en').format(this);
     return formattedDate;
   }
 

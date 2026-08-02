@@ -14,6 +14,7 @@ import '../../features/admin/presentation/admin_users_screen.dart';
 import '../../features/admin/presentation/admin_verification_screen.dart';
 import '../../features/authentication/presentation/choose_role_screen.dart';
 import '../../features/authentication/presentation/forgot_password_screen.dart';
+import '../../features/authentication/presentation/language_select_screen.dart';
 import '../../features/authentication/presentation/login_screen.dart';
 import '../../features/authentication/presentation/onboarding_screen.dart';
 import '../../features/authentication/presentation/otp_screen.dart';
@@ -32,35 +33,45 @@ import '../../features/home/presentation/shell_screen.dart';
 import '../../features/messages/presentation/chat_screen.dart';
 import '../../features/messages/presentation/conversations_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
+import '../../features/info/presentation/about_screen.dart';
+import '../../features/info/presentation/contact_screen.dart';
+import '../../features/info/presentation/privacy_screen.dart';
+import '../../features/info/presentation/terms_screen.dart';
+import '../../features/pricing/presentation/pricing_screen.dart';
 import '../../features/profile/presentation/agency_detail_screen.dart';
 import '../../features/profile/presentation/edit_profile_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/profile/presentation/talent_detail_screen.dart';
-import '../../features/search/presentation/global_search_screen.dart';
+import '../../features/search/presentation/find_talent_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../shared/models/models.dart';
 import '../../shared/providers/providers.dart';
 import 'route_names.dart';
 
-/// Bridges Riverpod's [authProvider] to go_router's [Listenable]-based
-/// `refreshListenable`, so every auth state change (login, logout, guest,
-/// onboarding, role selection…) re-runs [GoRouter.redirect] without
-/// rebuilding the router (and therefore without losing navigation state).
+/// Bridges Riverpod auth + settings to go_router's [Listenable]-based
+/// `refreshListenable`, so language choice and auth changes re-run redirects.
 class _AuthRefreshListenable extends ChangeNotifier {
   _AuthRefreshListenable(this._ref) {
-    _subscription = _ref.listen<AuthState>(
+    _authSub = _ref.listen<AuthState>(
       authProvider,
+      (previous, next) => notifyListeners(),
+      fireImmediately: false,
+    );
+    _settingsSub = _ref.listen<SettingsState>(
+      settingsProvider,
       (previous, next) => notifyListeners(),
       fireImmediately: false,
     );
   }
 
   final Ref _ref;
-  late final ProviderSubscription<AuthState> _subscription;
+  late final ProviderSubscription<AuthState> _authSub;
+  late final ProviderSubscription<SettingsState> _settingsSub;
 
   @override
   void dispose() {
-    _subscription.close();
+    _authSub.close();
+    _settingsSub.close();
     super.dispose();
   }
 }
@@ -102,6 +113,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: refreshListenable,
     redirect: (context, state) => _redirect(ref, state),
     routes: [
+      GoRoute(path: RouteNames.language, builder: (context, state) => const LanguageSelectScreen()),
       GoRoute(path: RouteNames.splash, builder: (context, state) => const SplashScreen()),
       GoRoute(path: RouteNames.onboarding, builder: (context, state) => const OnboardingScreen()),
       GoRoute(path: RouteNames.login, builder: (context, state) => const LoginScreen()),
@@ -140,7 +152,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: RouteNames.search, builder: (context, state) => const GlobalSearchScreen()),
+            GoRoute(
+              path: RouteNames.search,
+              builder: (context, state) => const FindTalentScreen(),
+            ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: RouteNames.postCasting, builder: (context, state) => const PostCastingScreen()),
@@ -179,6 +194,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: RouteNames.favorites, builder: (context, state) => const FavoritesScreen()),
       GoRoute(path: RouteNames.settings, builder: (context, state) => const SettingsScreen()),
+      GoRoute(path: RouteNames.pricing, builder: (context, state) => const PricingScreen()),
+      GoRoute(path: RouteNames.about, builder: (context, state) => const AboutScreen()),
+      GoRoute(path: RouteNames.contact, builder: (context, state) => const ContactScreen()),
+      GoRoute(path: RouteNames.terms, builder: (context, state) => const TermsScreen()),
+      GoRoute(path: RouteNames.privacy, builder: (context, state) => const PrivacyScreen()),
       GoRoute(path: RouteNames.admin, builder: (context, state) => const AdminDashboardScreen()),
       GoRoute(path: RouteNames.adminUsers, builder: (context, state) => const AdminUsersScreen()),
       GoRoute(path: RouteNames.adminCastings, builder: (context, state) => const AdminCastingsScreen()),
@@ -202,9 +222,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 String? _redirect(Ref ref, GoRouterState state) {
   final auth = ref.read(authProvider);
+  final settings = ref.read(settingsProvider);
   final loc = state.matchedLocation;
   final isAuthed = auth.isAuthenticated || auth.isGuest;
   final role = _roleOf(auth);
+
+  // Wait until prefs are loaded before deciding language gate.
+  if (!settings.hydrated) {
+    // Hold on splash (or language) until SharedPreferences hydrate.
+    return (loc == RouteNames.splash || loc == RouteNames.language) ? null : RouteNames.splash;
+  }
+
+  // Language must be chosen before anything else.
+  if (!settings.hasChosenLanguage) {
+    return loc == RouteNames.language ? null : RouteNames.language;
+  }
+
+  if (loc == RouteNames.language) {
+    return RouteNames.splash;
+  }
 
   // The splash screen owns its own timing/animation and decides when to
   // hand off — never redirect away from it automatically.

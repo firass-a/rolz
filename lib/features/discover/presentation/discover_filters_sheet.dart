@@ -11,6 +11,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../shared/models/models.dart';
@@ -86,7 +87,7 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _FilterSection(
-                    label: 'Gender',
+                    label: AppStrings.gender,
                     child: _singleSelect<Gender>(
                       values: Gender.values,
                       selected: _draft.gender,
@@ -95,8 +96,8 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                     ),
                   ),
                   _FilterSection(
-                    label: 'Age Range',
-                    trailing: '${_draft.ageMin ?? 16} – ${_draft.ageMax ?? 70} yrs',
+                    label: AppStrings.ageRange,
+                    trailing: AppStrings.ageRangeTrailing(_draft.ageMin ?? 16, _draft.ageMax ?? 70),
                     child: RangeSlider(
                       min: 16,
                       max: 70,
@@ -112,8 +113,11 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                     ),
                   ),
                   _FilterSection(
-                    label: 'Height Range',
-                    trailing: '${(_draft.heightMin ?? 140).round()} – ${(_draft.heightMax ?? 210).round()} cm',
+                    label: AppStrings.heightRange,
+                    trailing: AppStrings.heightRangeTrailing(
+                      (_draft.heightMin ?? 140).round(),
+                      (_draft.heightMax ?? 210).round(),
+                    ),
                     child: RangeSlider(
                       min: 140,
                       max: 210,
@@ -132,7 +136,7 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                     ),
                   ),
                   _FilterSection(
-                    label: 'Languages',
+                    label: AppStrings.languages,
                     child: _multiSelect(
                       options: _kLanguagePool,
                       selected: _draft.languages,
@@ -141,16 +145,16 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                   ),
                   if (cities.isNotEmpty)
                     _FilterSection(
-                      label: 'City',
+                      label: AppStrings.city,
                       child: _singleSelect<String>(
                         values: cities,
                         selected: _draft.city,
-                        labelOf: (c) => c,
+                        labelOf: DisplayLocalizer.t,
                         onChanged: (c) => _update((d) => d.copyWith(city: c)),
                       ),
                     ),
                   _FilterSection(
-                    label: 'Experience Level',
+                    label: AppStrings.experienceLevel,
                     child: _singleSelect<ExperienceLevel>(
                       values: ExperienceLevel.values,
                       selected: _draft.experienceLevel,
@@ -159,7 +163,7 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                     ),
                   ),
                   _FilterSection(
-                    label: 'Availability',
+                    label: AppStrings.availability,
                     child: _singleSelect<AvailabilityStatus>(
                       values: AvailabilityStatus.values,
                       selected: _draft.availability,
@@ -168,7 +172,7 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
                     ),
                   ),
                   _FilterSection(
-                    label: 'Sort By',
+                    label: AppStrings.sortBy,
                     child: _singleSelectRequired<TalentSortBy>(
                       values: TalentSortBy.values,
                       selected: _draft.sortBy,
@@ -203,13 +207,13 @@ class _DiscoverFiltersSheetState extends ConsumerState<DiscoverFiltersSheet> {
 String _sortLabel(TalentSortBy sort) {
   switch (sort) {
     case TalentSortBy.rating:
-      return 'Top Rated';
+      return AppStrings.sortTopRated;
     case TalentSortBy.newest:
-      return 'Newest';
+      return AppStrings.sortNewest;
     case TalentSortBy.views:
-      return 'Most Viewed';
+      return AppStrings.sortMostViewed;
     case TalentSortBy.name:
-      return 'Name (A-Z)';
+      return AppStrings.sortNameAZ;
   }
 }
 
@@ -248,13 +252,13 @@ Widget _singleSelect<T>({
   required T? selected,
   required String Function(T) labelOf,
   required ValueChanged<T?> onChanged,
-  String allLabel = 'Any',
+  String? allLabel,
 }) {
   return Wrap(
     spacing: AppSpacing.sm,
     runSpacing: AppSpacing.sm,
     children: [
-      KrFilterChip(label: allLabel, selected: selected == null, onTap: () => onChanged(null)),
+      KrFilterChip(label: allLabel ?? AppStrings.any, selected: selected == null, onTap: () => onChanged(null)),
       ...values.map(
         (v) => KrFilterChip(
           label: labelOf(v),
@@ -298,7 +302,7 @@ Widget _multiSelect({
     children: options.map((o) {
       final isSelected = selected.contains(o);
       return KrFilterChip(
-        label: o,
+        label: DisplayLocalizer.t(o),
         selected: isSelected,
         onTap: () {
           final next = List<String>.from(selected);
@@ -336,7 +340,7 @@ class _VerifiedToggle extends StatelessWidget {
             const Icon(Iconsax.verify, size: 18, color: AppColors.gold),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
-              child: Text('Verified profiles only', style: AppTextStyles.body.copyWith(fontSize: 14)),
+              child: Text(AppStrings.verifiedProfilesOnly, style: AppTextStyles.body.copyWith(fontSize: 14)),
             ),
             Switch(value: value, onChanged: onChanged),
           ],

@@ -7,6 +7,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../mock/mock_data.dart';
 import '../models/models.dart';
 import '../providers/recruiter_provider.dart';
@@ -44,7 +45,7 @@ class AuthRepository {
 
     final emailTaken = MockData.users.any((u) => u.email.toLowerCase() == email.toLowerCase());
     if (emailTaken) {
-      throw const AuthException('An account with this email already exists.');
+      throw AuthException(AppStrings.emailExists);
     }
 
     final id = _uuid.v4();

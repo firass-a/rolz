@@ -10,11 +10,11 @@ import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/widgets.dart';
 
-/// Cinematic entry point: a pure-black stage, the gold KAST-ROLZ wordmark
-/// scaling/fading into place, then the tagline. Once the moment has played
-/// out we hand off to [RouteNames.home] — the router's redirect guard picks
-/// the real destination (onboarding / login / home / dashboard) based on
-/// the current auth state.
+/// Cinematic entry point: a pure-black stage, the gold chameleon mark and
+/// KAST-ROLZ wordmark scaling/fading into place, then the tagline. Once the
+/// moment has played out we hand off to [RouteNames.home] — the router's
+/// redirect guard picks the real destination (onboarding / login / home /
+/// dashboard) based on the current auth state.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -43,15 +43,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              AppStrings.appName,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.heroTitle.copyWith(
-                color: AppColors.gold,
-                fontSize: 52,
-                letterSpacing: 6,
-              ),
-            )
+            const KrLogo(size: 128)
                 .animate()
                 .fadeIn(duration: 900.ms, curve: Curves.easeOut)
                 .scale(
@@ -60,6 +52,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   duration: 900.ms,
                   curve: Curves.easeOutBack,
                 ),
+            const SizedBox(height: AppSpacing.xl),
+            Text(
+              AppStrings.appName,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.heroTitle.copyWith(
+                color: AppColors.gold,
+                fontSize: 36,
+                letterSpacing: 6,
+              ),
+            ).animate(delay: 350.ms).fadeIn(duration: 700.ms),
             const SizedBox(height: AppSpacing.lg),
             Container(width: 56, height: 1, color: AppColors.gold)
                 .animate(delay: 550.ms)

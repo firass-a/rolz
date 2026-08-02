@@ -29,26 +29,26 @@ class _RoleOption {
   final String subtitle;
 }
 
-const _options = [
-  _RoleOption(
-    role: UserRole.talent,
-    icon: Iconsax.user,
-    title: AppStrings.roleTalent,
-    subtitle: AppStrings.roleTalentSubtitle,
-  ),
-  _RoleOption(
-    role: UserRole.recruiter,
-    icon: Iconsax.briefcase,
-    title: AppStrings.roleRecruiter,
-    subtitle: AppStrings.roleRecruiterSubtitle,
-  ),
-  _RoleOption(
-    role: UserRole.guest,
-    icon: Iconsax.eye,
-    title: 'Just Browsing',
-    subtitle: 'Explore KAST-ROLZ with limited access',
-  ),
-];
+List<_RoleOption> get _options => [
+      _RoleOption(
+        role: UserRole.talent,
+        icon: Iconsax.user,
+        title: AppStrings.roleTalent,
+        subtitle: AppStrings.roleTalentSubtitle,
+      ),
+      _RoleOption(
+        role: UserRole.recruiter,
+        icon: Iconsax.briefcase,
+        title: AppStrings.roleRecruiter,
+        subtitle: AppStrings.roleRecruiterSubtitle,
+      ),
+      _RoleOption(
+        role: UserRole.guest,
+        icon: Iconsax.eye,
+        title: AppStrings.justBrowsing,
+        subtitle: AppStrings.exploreLimited,
+      ),
+    ];
 
 /// Three elegant role cards — Talent, Recruiter, Guest. When arriving from
 /// [RegisterScreen] (via [draft]), picking Talent/Recruiter finalises
@@ -77,7 +77,7 @@ class _ChooseRoleScreenState extends ConsumerState<ChooseRoleScreen> {
 
     final draft = widget.draft;
     if (draft == null) {
-      context.showSnack('Please create an account first.', isError: true);
+      context.showSnack(AppStrings.pleaseCreateAccount, isError: true);
       context.push(RouteNames.register);
       return;
     }
@@ -101,6 +101,7 @@ class _ChooseRoleScreenState extends ConsumerState<ChooseRoleScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authProvider);
+    final options = _options;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -118,16 +119,16 @@ class _ChooseRoleScreenState extends ConsumerState<ChooseRoleScreen> {
               ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'You can always change this later from your profile.',
+                AppStrings.changeRoleLater,
                 style: AppTextStyles.bodyMuted,
               ).animate().fadeIn(delay: 80.ms, duration: 400.ms),
               const SizedBox(height: AppSpacing.xxl),
               Expanded(
                 child: ListView.separated(
-                  itemCount: _options.length,
+                  itemCount: options.length,
                   separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
                   itemBuilder: (context, index) {
-                    final option = _options[index];
+                    final option = options[index];
                     final selected = _selected == option.role;
                     return _RoleCard(
                       option: option,

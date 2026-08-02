@@ -90,23 +90,28 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const KrLogo(size: 56)
+                    .animate()
+                    .fadeIn(duration: 400.ms)
+                    .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1)),
+                const SizedBox(height: AppSpacing.lg),
                 Text(
-                  'Create Account',
+                  AppStrings.createAccount,
                   style: AppTextStyles.heroTitleCompact,
                 ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Join KAST-ROLZ and start your next chapter.',
+                  AppStrings.joinKastRolz,
                   style: AppTextStyles.bodyMuted,
                 ).animate().fadeIn(delay: 80.ms, duration: 400.ms),
                 const SizedBox(height: AppSpacing.xxl),
                 _Field(
-                  label: 'Full Name',
+                  label: AppStrings.fullName,
                   controller: _nameController,
                   hint: 'Amina Sofiane',
                   icon: Iconsax.user,
                   textInputAction: TextInputAction.next,
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty) ? AppStrings.enterName : null,
                   delay: 120,
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -118,8 +123,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Enter your email';
-                    if (!v.trim().isValidEmail) return 'Enter a valid email';
+                    if (v == null || v.trim().isEmpty) return AppStrings.enterEmail;
+                    if (!v.trim().isValidEmail) return AppStrings.enterValidEmail;
                     return null;
                   },
                   delay: 160,
@@ -128,14 +133,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 _Field(
                   label: AppStrings.password,
                   controller: _passwordController,
-                  hint: 'Minimum 6 characters',
+                  hint: AppStrings.minPassword,
                   icon: Iconsax.lock,
                   obscureText: _obscurePassword,
                   textInputAction: TextInputAction.next,
                   onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Enter a password';
-                    if (v.length < 6) return 'At least 6 characters';
+                    if (v == null || v.isEmpty) return AppStrings.enterPassword;
+                    if (v.length < 6) return AppStrings.atLeast6Characters;
                     return null;
                   },
                   delay: 200,
@@ -144,22 +149,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 _Field(
                   label: AppStrings.confirmPassword,
                   controller: _confirmController,
-                  hint: 'Re-enter your password',
+                  hint: AppStrings.reenterPassword,
                   icon: Iconsax.lock,
                   obscureText: _obscureConfirm,
                   textInputAction: TextInputAction.done,
                   onToggleObscure: () => setState(() => _obscureConfirm = !_obscureConfirm),
                   onFieldSubmitted: (_) => _submit(),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Confirm your password';
-                    if (v != _passwordController.text) return 'Passwords do not match';
+                    if (v == null || v.isEmpty) return AppStrings.confirmYourPassword;
+                    if (v != _passwordController.text) return AppStrings.passwordsDoNotMatch;
                     return null;
                   },
                   delay: 240,
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 PremiumButton.primary(
-                  label: 'Continue',
+                  label: AppStrings.continueLabel,
                   fullWidth: true,
                   trailingIcon: Iconsax.arrow_right_3,
                   onPressed: _submit,

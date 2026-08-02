@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -78,16 +79,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.85, 0.85), end: const Offset(1, 1)),
             const SizedBox(height: AppSpacing.xl),
             Text(
-              'Forgot Password?',
+              AppStrings.forgotPassword,
               style: AppTextStyles.heroTitleCompact,
             ).animate().fadeIn(delay: 80.ms, duration: 400.ms),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              "Enter the email linked to your account and we'll send you a reset link.",
+              AppStrings.forgotPasswordBodyLong,
               style: AppTextStyles.bodyMuted,
             ).animate().fadeIn(delay: 140.ms, duration: 400.ms),
             const SizedBox(height: AppSpacing.xxl),
-            Text('Email', style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
+            Text(AppStrings.email, style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
             const SizedBox(height: 6),
             TextFormField(
               controller: _emailController,
@@ -97,14 +98,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               onFieldSubmitted: (_) => _submit(),
               decoration: const InputDecoration(hintText: 'you@example.com', prefixIcon: Icon(Iconsax.sms)),
               validator: (value) {
-                if (value == null || value.trim().isEmpty) return 'Enter your email';
-                if (!value.trim().isValidEmail) return 'Enter a valid email';
+                if (value == null || value.trim().isEmpty) return AppStrings.enterEmail;
+                if (!value.trim().isValidEmail) return AppStrings.enterValidEmail;
                 return null;
               },
             ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
             const SizedBox(height: AppSpacing.xxl),
             PremiumButton.primary(
-              label: 'Send Reset Link',
+              label: AppStrings.sendResetLink,
               fullWidth: true,
               isLoading: _submitting,
               onPressed: _submit,
@@ -156,19 +157,19 @@ class _SuccessView extends StatelessWidget {
               ),
           const SizedBox(height: AppSpacing.xl),
           Text(
-            'Check Your Email',
+            AppStrings.checkYourEmail,
             style: AppTextStyles.sectionTitle,
             textAlign: TextAlign.center,
           ).animate().fadeIn(delay: 120.ms, duration: 400.ms),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'If an account exists for\n$email, a reset link is on its way.',
+            AppStrings.resetEmailSent(email),
             style: AppTextStyles.bodyMuted,
             textAlign: TextAlign.center,
           ).animate().fadeIn(delay: 180.ms, duration: 400.ms),
           const SizedBox(height: AppSpacing.xxl),
           PremiumButton.secondary(
-            label: 'Back to Sign In',
+            label: AppStrings.backToSignIn,
             fullWidth: true,
             onPressed: () => context.pop(),
           ).animate().fadeIn(delay: 240.ms, duration: 400.ms),

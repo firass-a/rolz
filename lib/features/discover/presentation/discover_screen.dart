@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -67,7 +68,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Discover', showBackButton: false),
+      appBar: CustomAppBar(title: AppStrings.navDiscover, showBackButton: false),
       body: Column(
         children: [
           Padding(
@@ -99,7 +100,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         );
                   },
                   items: [
-                    const FilterChipItem(value: 'all', label: 'All'),
+                    FilterChipItem(value: 'all', label: AppStrings.all),
                     ...TalentCategory.values.map((c) => FilterChipItem(value: c.name, label: c.label)),
                   ],
                 ),
@@ -117,7 +118,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: talents.isEmpty
-                ? const Center(
+                ? Center(
                     child: EmptyState(
                       title: AppStrings.emptySearchTitle,
                       subtitle: AppStrings.emptySearchSubtitle,
@@ -143,7 +144,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                             name: talent.fullName,
                             imageUrl: talent.headshotUrl,
                             category: talent.category.label,
-                            city: talent.city,
+                            city: DisplayLocalizer.t(talent.city),
                             verified: talent.isVerified,
                             rating: talent.rating,
                             available: talent.availability == AvailabilityStatus.available,
@@ -168,7 +169,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                             name: talent.fullName,
                             imageUrl: talent.headshotUrl,
                             category: talent.category.label,
-                            city: talent.city,
+                            city: DisplayLocalizer.t(talent.city),
                             verified: talent.isVerified,
                             rating: talent.rating,
                             available: talent.availability == AvailabilityStatus.available,

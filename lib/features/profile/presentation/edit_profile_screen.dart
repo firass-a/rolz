@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/widgets.dart';
@@ -120,7 +121,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     await Future.delayed(const Duration(milliseconds: 300));
     if (!mounted) return;
     setState(() => _submitting = false);
-    context.showSnack('Profile updated successfully!');
+    context.showSnack(AppStrings.profileUpdated);
     context.pop();
   }
 
@@ -131,12 +132,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (user == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: const CustomAppBar(title: 'Edit Profile'),
-        body: const Center(
+        appBar: CustomAppBar(title: AppStrings.editProfile),
+        body: Center(
           child: EmptyState(
             icon: Iconsax.user_edit,
-            title: 'Sign In Required',
-            subtitle: 'Create an account to build and edit your profile.',
+            title: AppStrings.signInRequired,
+            subtitle: AppStrings.signInRequiredProfile,
           ),
         ),
       );
@@ -148,7 +149,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Edit Profile'),
+      appBar: CustomAppBar(title: AppStrings.editProfile),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.xxl),
@@ -168,37 +169,37 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       GestureDetector(
-                        onTap: () => context.showSnack('Photo upload is coming soon.'),
-                        child: Text('Change Photo', style: AppTextStyles.buttonSmall.copyWith(color: AppColors.gold)),
+                        onTap: () => context.showSnack(AppStrings.photoUploadComingSoon),
+                        child: Text(AppStrings.changePhoto, style: AppTextStyles.buttonSmall.copyWith(color: AppColors.gold)),
                       ),
                     ],
                   ),
                 ).animate().fadeIn(duration: 300.ms),
                 const SizedBox(height: AppSpacing.xl),
-                const _SectionLabel('Basic Information'),
+                _SectionLabel(AppStrings.basicInformation),
                 Row(
                   children: [
-                    Expanded(child: _Field(label: 'First Name', controller: _firstNameController, hint: 'Amina')),
+                    Expanded(child: _Field(label: AppStrings.firstName, controller: _firstNameController, hint: AppStrings.hintFirstName)),
                     const SizedBox(width: AppSpacing.md),
-                    Expanded(child: _Field(label: 'Last Name', controller: _lastNameController, hint: 'Sofiane')),
+                    Expanded(child: _Field(label: AppStrings.lastName, controller: _lastNameController, hint: AppStrings.hintLastName)),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                _Field(label: 'Phone', controller: _phoneController, hint: '+213 5XX XX XX XX', keyboardType: TextInputType.phone, required: false),
+                _Field(label: AppStrings.phone, controller: _phoneController, hint: AppStrings.hintPhone, keyboardType: TextInputType.phone, required: false),
                 const SizedBox(height: AppSpacing.lg),
-                _Field(label: 'Bio', controller: _bioController, hint: 'Tell the world a little about yourself…', maxLines: 4, required: false),
+                _Field(label: AppStrings.bio, controller: _bioController, hint: AppStrings.hintBio, maxLines: 4, required: false),
                 if (talent != null) ...[
                   const SizedBox(height: AppSpacing.xxl),
-                  const _SectionLabel('Talent Details'),
+                  _SectionLabel(AppStrings.talentDetails),
                   Row(
                     children: [
-                      Expanded(child: _Field(label: 'City', controller: _cityController, hint: 'Algiers', required: false)),
+                      Expanded(child: _Field(label: AppStrings.city, controller: _cityController, hint: AppStrings.hintCity, required: false)),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
                         child: _Field(
-                          label: 'Height (cm)',
+                          label: AppStrings.heightCm,
                           controller: _heightController,
-                          hint: '175',
+                          hint: AppStrings.hintHeight,
                           keyboardType: TextInputType.number,
                           required: false,
                         ),
@@ -207,13 +208,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   _Field(
-                    label: 'Skills (comma separated)',
+                    label: AppStrings.skillsCommaSeparated,
                     controller: _skillsController,
-                    hint: 'Acting, Dance, Arabic…',
+                    hint: AppStrings.hintSkills,
                     required: false,
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Availability', style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
+                  Text(AppStrings.availability, style: AppTextStyles.caption.copyWith(letterSpacing: 0.4)),
                   const SizedBox(height: AppSpacing.sm),
                   Wrap(
                     spacing: AppSpacing.sm,
@@ -228,14 +229,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 ],
                 if (recruiter != null) ...[
                   const SizedBox(height: AppSpacing.xxl),
-                  const _SectionLabel('Company Details'),
-                  _Field(label: 'Company Name', controller: _companyNameController, hint: 'Atlas Films Production', required: false),
+                  _SectionLabel(AppStrings.companyDetails),
+                  _Field(label: AppStrings.companyName, controller: _companyNameController, hint: AppStrings.hintCompanyName, required: false),
                   const SizedBox(height: AppSpacing.lg),
-                  _Field(label: 'City', controller: _companyCityController, hint: 'Algiers', required: false),
+                  _Field(label: AppStrings.city, controller: _companyCityController, hint: AppStrings.hintCity, required: false),
                 ],
                 const SizedBox(height: AppSpacing.xxl),
                 PremiumButton.primary(
-                  label: 'Save Changes',
+                  label: AppStrings.saveChanges,
                   fullWidth: true,
                   isLoading: _submitting,
                   icon: Iconsax.tick_circle,
@@ -293,7 +294,7 @@ class _Field extends StatelessWidget {
           keyboardType: keyboardType,
           style: AppTextStyles.input,
           decoration: InputDecoration(hintText: hint),
-          validator: required ? (v) => (v == null || v.trim().isEmpty) ? 'Required' : null : null,
+          validator: required ? (v) => (v == null || v.trim().isEmpty) ? AppStrings.required : null : null,
         ),
       ],
     );

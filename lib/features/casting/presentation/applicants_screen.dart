@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -39,12 +41,12 @@ class _ApplicantsScreenState extends ConsumerState<ApplicantsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: casting != null ? 'Applicants · ${casting.title}' : 'Applicants',
+        title: casting != null ? AppStrings.applicantsFor(DisplayLocalizer.t(casting.title)) : AppStrings.applicants,
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.sm),
+          SizedBox(
+            height: 44,
             child: FilterChipBar(
               selectedValue: _filter?.name ?? 'all',
               onSelected: (value) {
@@ -55,7 +57,7 @@ class _ApplicantsScreenState extends ConsumerState<ApplicantsScreen> {
                 });
               },
               items: [
-                FilterChipItem(value: 'all', label: 'All', count: applications.length),
+                FilterChipItem(value: 'all', label: AppStrings.all, count: applications.length),
                 for (final status in ApplicationStatus.values)
                   if (status != ApplicationStatus.withdrawn)
                     FilterChipItem(
@@ -66,13 +68,14 @@ class _ApplicantsScreenState extends ConsumerState<ApplicantsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: filtered.isEmpty
-                ? const Center(
+                ? Center(
                     child: EmptyState(
                       icon: Iconsax.profile_2user,
-                      title: 'No Applicants Yet',
-                      subtitle: 'Once talents apply to this casting, they\'ll show up here.',
+                      title: AppStrings.noApplicantsYet,
+                      subtitle: AppStrings.noApplicantsSubtitle,
                     ),
                   )
                 : ListView.separated(
@@ -100,7 +103,7 @@ class _ApplicantsScreenState extends ConsumerState<ApplicantsScreen> {
   Future<void> _updateStatus(ApplicationModel application, ApplicationStatus status) async {
     await ref.read(applicationRepositoryProvider).updateStatus(application.id, status);
     if (!mounted) return;
-    context.showSnack('Application marked as ${status.label.toLowerCase()}.');
+    context.showSnack(AppStrings.applicationMarkedAs(status.label));
   }
 
   Future<void> _message(ApplicationModel application) async {
@@ -168,7 +171,7 @@ class _ApplicantCard extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      talent?.fullName ?? 'Unknown Talent',
+                      talent?.fullName ?? AppStrings.unknownTalent,
                       style: AppTextStyles.cardTitle.copyWith(fontSize: 15),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -177,14 +180,14 @@ class _ApplicantCard extends ConsumerWidget {
                     Text(
                       [
                         if (talent != null) talent.category.label,
-                        if (talent != null) talent.city,
+                        if (talent != null) DisplayLocalizer.t(talent.city),
                       ].join(' · '),
                       style: AppTextStyles.bodySmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text('Applied ${application.createdAt.timeAgo}', style: AppTextStyles.caption),
+                    Text(AppStrings.appliedAgo(application.createdAt.timeAgo), style: AppTextStyles.caption),
                   ],
                 ),
               ),
@@ -200,12 +203,12 @@ class _ApplicantCard extends ConsumerWidget {
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
-              _ActionIcon(icon: Iconsax.tick_circle, color: AppColors.success, tooltip: 'Accept', onTap: onAccept),
-              _ActionIcon(icon: Iconsax.close_circle, color: AppColors.error, tooltip: 'Reject', onTap: onReject),
-              _ActionIcon(icon: Iconsax.star_1, color: AppColors.gold, tooltip: 'Shortlist', onTap: onShortlist),
-              _ActionIcon(icon: Iconsax.message, color: AppColors.info, tooltip: 'Message', onTap: onMessage),
+              _ActionIcon(icon: Iconsax.tick_circle, color: AppColors.success, tooltip: AppStrings.accept, onTap: onAccept),
+              _ActionIcon(icon: Iconsax.close_circle, color: AppColors.error, tooltip: AppStrings.reject, onTap: onReject),
+              _ActionIcon(icon: Iconsax.star_1, color: AppColors.gold, tooltip: AppStrings.shortlist, onTap: onShortlist),
+              _ActionIcon(icon: Iconsax.message, color: AppColors.info, tooltip: AppStrings.message, onTap: onMessage),
               const Spacer(),
-              _ActionIcon(icon: Iconsax.profile_circle, color: AppColors.textSecondary, tooltip: 'View Profile', onTap: onViewProfile),
+              _ActionIcon(icon: Iconsax.profile_circle, color: AppColors.textSecondary, tooltip: AppStrings.viewProfile, onTap: onViewProfile),
             ],
           ),
         ],

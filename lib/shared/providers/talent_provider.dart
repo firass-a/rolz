@@ -130,6 +130,7 @@ class TalentFilters {
   final String? city;
   final String? country;
   final ExperienceLevel? experienceLevel;
+  final int? experienceMinYears;
   final List<String> skills;
   final AvailabilityStatus? availability;
   final bool verifiedOnly;
@@ -150,6 +151,7 @@ class TalentFilters {
     this.city,
     this.country,
     this.experienceLevel,
+    this.experienceMinYears,
     this.skills = const [],
     this.availability,
     this.verifiedOnly = false,
@@ -171,6 +173,7 @@ class TalentFilters {
       (city != null && city!.isNotEmpty) ||
       (country != null && country!.isNotEmpty) ||
       experienceLevel != null ||
+      experienceMinYears != null ||
       skills.isNotEmpty ||
       availability != null ||
       verifiedOnly;
@@ -190,6 +193,7 @@ class TalentFilters {
     Object? city = _sentinel,
     Object? country = _sentinel,
     Object? experienceLevel = _sentinel,
+    Object? experienceMinYears = _sentinel,
     List<String>? skills,
     Object? availability = _sentinel,
     bool? verifiedOnly,
@@ -211,6 +215,9 @@ class TalentFilters {
       country: identical(country, _sentinel) ? this.country : country as String?,
       experienceLevel:
           identical(experienceLevel, _sentinel) ? this.experienceLevel : experienceLevel as ExperienceLevel?,
+      experienceMinYears: identical(experienceMinYears, _sentinel)
+          ? this.experienceMinYears
+          : experienceMinYears as int?,
       skills: skills ?? this.skills,
       availability: identical(availability, _sentinel) ? this.availability : availability as AvailabilityStatus?,
       verifiedOnly: verifiedOnly ?? this.verifiedOnly,

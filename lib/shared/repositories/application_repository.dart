@@ -6,6 +6,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../models/models.dart';
 import '../providers/application_provider.dart';
 import '../providers/casting_provider.dart';
@@ -61,8 +62,8 @@ class ApplicationRepository {
         _ref.read(notificationRepositoryProvider).add(
               userId: recruiterUserId,
               type: NotificationType.application,
-              title: 'New application',
-              body: 'A talent applied to "${casting.title}".',
+              title: AppStrings.notifNewApplicationTitle,
+              body: AppStrings.notifNewApplicationBody(casting.title),
               relatedId: application.id,
             );
       }
@@ -95,7 +96,7 @@ class ApplicationRepository {
     if (application == null) return;
 
     final casting = _ref.read(castingProvider.notifier).getById(application.castingId);
-    final castingTitle = casting?.title ?? 'a casting';
+    final castingTitle = casting?.title ?? AppStrings.aCasting;
     final talentUserId = _ref.read(talentProvider.notifier).getById(application.talentId)?.userId;
     if (talentUserId == null) return;
 
@@ -103,16 +104,16 @@ class ApplicationRepository {
       _ref.read(notificationRepositoryProvider).add(
             userId: talentUserId,
             type: NotificationType.acceptance,
-            title: 'Application accepted',
-            body: 'Great news! Your application to "$castingTitle" was accepted.',
+            title: AppStrings.notifApplicationAcceptedTitle,
+            body: AppStrings.notifApplicationAcceptedBody(castingTitle),
             relatedId: application.id,
           );
     } else if (status == ApplicationStatus.rejected) {
       _ref.read(notificationRepositoryProvider).add(
             userId: talentUserId,
             type: NotificationType.rejection,
-            title: 'Application update',
-            body: 'Your application to "$castingTitle" was not retained this time.',
+            title: AppStrings.notifApplicationUpdateTitle,
+            body: AppStrings.notifApplicationRejectedBody(castingTitle),
             relatedId: application.id,
           );
     }

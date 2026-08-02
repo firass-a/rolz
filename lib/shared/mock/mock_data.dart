@@ -220,6 +220,7 @@ class _CastingSeed {
   final bool isFeatured;
   final bool isUrgent;
   final bool hasAgency;
+  final String? imageUrl;
 
   const _CastingSeed({
     required this.title,
@@ -244,6 +245,7 @@ class _CastingSeed {
     this.isFeatured = false,
     this.isUrgent = false,
     this.hasAgency = false,
+    this.imageUrl,
   });
 }
 
@@ -271,6 +273,8 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: 60,
     shootEndDays: 100,
     isFeatured: true,
+    imageUrl:
+        'https://images.unsplash.com/photo-1485846234645-a62644f84781?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Les Ombres de la Casbah — Rôle Principal Masculin',
@@ -294,6 +298,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 18,
     shootStartDays: 55,
     shootEndDays: 95,
+    imageUrl:
+        'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Dar El Bacha — Saison 2, Rôle Récurrent',
@@ -316,6 +322,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 10,
     shootStartDays: 40,
     shootEndDays: 160,
+    isFeatured: true,
+    imageUrl: 'assets/images/castings/family_drama.png',
   ),
   _CastingSeed(
     title: 'Nour — Rôle Principal Féminin (Telenovela)',
@@ -340,6 +348,8 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: 30,
     shootEndDays: 210,
     isFeatured: true,
+    imageUrl:
+        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Djezzy Mobile — Spot Publicitaire',
@@ -363,6 +373,8 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: 5,
     shootEndDays: 6,
     isUrgent: true,
+    imageUrl:
+        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Ifri — Campagne Boisson Rafraîchissante',
@@ -385,6 +397,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 9,
     shootStartDays: 10,
     shootEndDays: 11,
+    imageUrl:
+        'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: "Festival de Théâtre d'Alger — Troupe Principale",
@@ -407,6 +421,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 30,
     shootStartDays: 45,
     shootEndDays: 75,
+    imageUrl:
+        'https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Pièce Kabyle Traditionnelle — Béjaïa',
@@ -429,6 +445,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 40,
     shootStartDays: 80,
     shootEndDays: 110,
+    imageUrl:
+        'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: "Documentaire Terre d'Algérie — Voix Off",
@@ -451,6 +469,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 12,
     shootStartDays: 20,
     shootEndDays: 22,
+    imageUrl:
+        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Série Animée — Doublage Français, Paris',
@@ -473,6 +493,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 15,
     shootStartDays: 30,
     shootEndDays: 60,
+    imageUrl:
+        'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Algiers Fashion Week — Défilé Principal',
@@ -498,6 +520,7 @@ const List<_CastingSeed> _castingSeeds = [
     shootEndDays: 36,
     isFeatured: true,
     hasAgency: true,
+    imageUrl: 'assets/images/castings/fashion_week.png',
   ),
   _CastingSeed(
     title: 'Hiba Couture — Campagne Photo',
@@ -521,6 +544,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: -5,
     shootStartDays: -20,
     shootEndDays: -18,
+    imageUrl:
+        'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Le Dernier Tramway — Court Métrage',
@@ -544,6 +569,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 20,
     shootStartDays: 50,
     shootEndDays: 55,
+    imageUrl:
+        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Co-production Internationale — Figuration',
@@ -567,6 +594,8 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: 15,
     shootEndDays: 45,
     isUrgent: true,
+    imageUrl:
+        'https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Nouvelle Star — Recherche de Danseurs',
@@ -589,6 +618,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: 8,
     shootStartDays: 25,
     shootEndDays: 29,
+    imageUrl:
+        'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'CPA Bank — Publicité Institutionnelle',
@@ -611,6 +642,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: -3,
     shootStartDays: -10,
     shootEndDays: -9,
+    imageUrl:
+        'https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Clip Raï — Danseuses Backup',
@@ -635,13 +668,15 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: 12,
     shootEndDays: 13,
     isUrgent: true,
+    imageUrl:
+        'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
-    title: 'Shooting Mariée — Collection Printemps',
+    title: 'Bride Photography — Collection Printemps',
     descriptionFr:
-        "Séance photo pour une collection de robes de mariée à Tlemcen. Encore en préparation.",
+        "Séance photo pour une collection de robes de mariée à Tlemcen.",
     descriptionEn:
-        'Photo shoot for a bridal dress collection in Tlemcen. Still in preparation.',
+        'Photo shoot for a bridal dress collection in Tlemcen.',
     role: 'Mannequin',
     category: TalentCategory.model,
     type: CastingType.fashion,
@@ -654,17 +689,19 @@ const List<_CastingSeed> _castingSeeds = [
     experienceLevel: ExperienceLevel.beginner,
     salary: 25000,
     currency: 'DZD',
-    status: CastingStatus.draft,
-    deadlineDays: 45,
-    shootStartDays: 90,
-    shootEndDays: 91,
+    status: CastingStatus.open,
+    deadlineDays: 20,
+    shootStartDays: 35,
+    shootEndDays: 36,
+    isFeatured: true,
+    imageUrl: 'assets/images/castings/bride_photography.png',
   ),
   _CastingSeed(
-    title: 'Blockbuster International — Cascadeurs & Figuration, Dubai',
+    title: 'Action Movie — Cascadeurs & Figuration, Dubai',
     descriptionFr:
         "Production internationale à gros budget tournée à Dubai. Recherche des figurants et cascadeurs formés aux arts martiaux.",
     descriptionEn:
-        'Big-budget international production shot in Dubai. Looking for extras and stunt performers trained in martial arts.',
+        'Big-budget international action production shot in Dubai. Looking for extras and stunt performers trained in martial arts.',
     role: 'Cascadeur / Figurant',
     category: TalentCategory.extra,
     type: CastingType.film,
@@ -682,6 +719,7 @@ const List<_CastingSeed> _castingSeeds = [
     shootEndDays: 100,
     isFeatured: true,
     hasAgency: true,
+    imageUrl: 'assets/images/castings/action_movie.png',
   ),
   _CastingSeed(
     title: 'Podcast de Marque — Voix & Présentation, Le Caire',
@@ -704,6 +742,8 @@ const List<_CastingSeed> _castingSeeds = [
     deadlineDays: -60,
     shootStartDays: -80,
     shootEndDays: -70,
+    imageUrl:
+        'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
 ];
 
@@ -1161,8 +1201,8 @@ class MockData {
         role: seed.role,
         category: seed.category,
         type: seed.type,
-        bannerUrl: coverUrl('$id-banner'),
-        thumbnailUrl: squareUrl('$id-thumb'),
+        bannerUrl: seed.imageUrl ?? coverUrl('$id-banner'),
+        thumbnailUrl: seed.imageUrl ?? squareUrl('$id-thumb'),
         recruiterId: recruiter.id,
         agencyId: agencyId,
         location: '${cityInfo.city}, ${cityInfo.country}',

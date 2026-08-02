@@ -3,6 +3,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_spacing.dart';
+import '../constants/app_strings.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/formatters.dart';
 import 'kr_badge.dart';
@@ -83,10 +84,10 @@ class KrTalentCard extends StatelessWidget {
               ),
             ),
             if (available)
-              const Positioned(
+              Positioned(
                 top: 8,
                 left: 8,
-                child: StatusBadge.success('Available', showDot: true, filled: false),
+                child: StatusBadge.success(AppStrings.talentAvailable, showDot: true, filled: false),
               ),
             if (onFavoriteTap != null)
               Positioned(
@@ -209,7 +210,7 @@ class KrTalentCard extends StatelessWidget {
                       ),
                       if (available) ...[
                         const SizedBox(width: AppSpacing.sm),
-                        const StatusBadge.success('Available'),
+                        StatusBadge.success(AppStrings.talentAvailable),
                       ],
                     ],
                   ),

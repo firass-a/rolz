@@ -6,6 +6,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/l10n/display_localizer.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/extensions.dart';
@@ -49,9 +51,9 @@ class RecruiterDashboardScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Welcome back,', style: AppTextStyles.bodySmall),
+                          Text(AppStrings.welcomeBackComma, style: AppTextStyles.bodySmall),
                           Text(
-                            recruiter?.companyName ?? user?.fullName ?? 'Recruiter',
+                            recruiter?.companyName ?? user?.fullName ?? AppStrings.roleRecruiterLabel,
                             style: AppTextStyles.sectionTitle.copyWith(fontSize: 21),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -78,10 +80,10 @@ class RecruiterDashboardScreen extends ConsumerWidget {
                   crossAxisSpacing: AppSpacing.sm,
                   childAspectRatio: 1.35,
                   children: [
-                    KrStatCard(icon: Iconsax.briefcase, value: '$openCastings', label: 'Open Castings'),
-                    KrStatCard(icon: Iconsax.profile_2user, value: '${applications.length}', label: 'Total Applicants'),
-                    KrStatCard(icon: Iconsax.clock, value: '$pendingApplications', label: 'Pending Review'),
-                    KrStatCard(icon: Iconsax.crown_1, value: '${recruiter?.hireCount ?? 0}', label: 'Successful Hires'),
+                    KrStatCard(icon: Iconsax.briefcase, value: '$openCastings', label: AppStrings.openCastings),
+                    KrStatCard(icon: Iconsax.profile_2user, value: '${applications.length}', label: AppStrings.totalApplicants),
+                    KrStatCard(icon: Iconsax.clock, value: '$pendingApplications', label: AppStrings.pendingReview),
+                    KrStatCard(icon: Iconsax.crown_1, value: '${recruiter?.hireCount ?? 0}', label: AppStrings.successfulHires),
                   ],
                 ).animate().fadeIn(delay: 120.ms, duration: 400.ms).slideY(begin: 0.06, end: 0),
               ),
@@ -93,7 +95,7 @@ class RecruiterDashboardScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: PremiumButton.primary(
-                        label: 'Post a Casting',
+                        label: AppStrings.postACasting,
                         icon: Iconsax.add_circle,
                         onPressed: () => context.go(RouteNames.postCasting),
                       ),
@@ -101,7 +103,7 @@ class RecruiterDashboardScreen extends ConsumerWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: PremiumButton.secondary(
-                        label: 'Find Talent',
+                        label: AppStrings.findTalent,
                         icon: Iconsax.search_normal,
                         onPressed: () => context.go(RouteNames.search),
                       ),
@@ -113,17 +115,17 @@ class RecruiterDashboardScreen extends ConsumerWidget {
             SliverPadding(
               padding: const EdgeInsets.only(top: AppSpacing.xxl),
               sliver: SliverToBoxAdapter(
-                child: KrSectionHeader(title: 'Your Castings', subtitle: '${castings.length} total'),
+                child: KrSectionHeader(title: AppStrings.yourCastings, subtitle: AppStrings.totalCount(castings.length)),
               ),
             ),
             if (castings.isEmpty)
-              const SliverPadding(
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
                 sliver: SliverToBoxAdapter(
                   child: EmptyState(
                     icon: Iconsax.briefcase,
-                    title: 'No Castings Yet',
-                    subtitle: 'Post your first casting to start receiving applications.',
+                    title: AppStrings.noCastingsYet,
+                    subtitle: AppStrings.postFirstCasting,
                     compact: true,
                   ),
                 ),
@@ -136,7 +138,7 @@ class RecruiterDashboardScreen extends ConsumerWidget {
                     children: castings
                         .take(5)
                         .map<Widget>((casting) => _CastingRow(
-                              title: casting.title,
+                              title: DisplayLocalizer.t(casting.title),
                               status: casting.status,
                               applicants: casting.applicantCount,
                               onTap: () => context.push(RouteNames.castingDetailPath(casting.id)),
@@ -200,7 +202,7 @@ class _CastingRow extends StatelessWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Icon(Iconsax.profile_2user, size: 13, color: AppColors.textMuted),
                     const SizedBox(width: 4),
-                    Text('$applicants applicants', style: AppTextStyles.caption),
+                    Text(AppStrings.applicantsLabel(applicants), style: AppTextStyles.caption),
                   ],
                 ),
               ],

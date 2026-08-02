@@ -5,6 +5,7 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../mock/mock_data.dart';
 import '../models/models.dart';
 import '../repositories/auth_repository.dart';
@@ -68,7 +69,7 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, clearError: true);
     final user = await _repo.login(email, password);
     if (user == null) {
-      state = state.copyWith(isLoading: false, error: 'Invalid email or password.');
+      state = state.copyWith(isLoading: false, error: AppStrings.invalidCredentials);
       return;
     }
     state = AuthState(

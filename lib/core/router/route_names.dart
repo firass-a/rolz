@@ -8,6 +8,7 @@ abstract final class RouteNames {
   // Auth / onboarding
   // ---------------------------------------------------------------------
   static const splash = '/splash';
+  static const language = '/language';
   static const onboarding = '/onboarding';
   static const login = '/login';
   static const register = '/register';
@@ -45,6 +46,11 @@ abstract final class RouteNames {
   static const notifications = '/notifications';
   static const favorites = '/favorites';
   static const settings = '/settings';
+  static const pricing = '/pricing';
+  static const about = '/about';
+  static const contact = '/contact';
+  static const terms = '/terms';
+  static const privacy = '/privacy';
   static const admin = '/admin';
   static const adminUsers = '/admin/users';
   static const adminCastings = '/admin/castings';

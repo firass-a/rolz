@@ -26,7 +26,7 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Profile', showBackButton: false),
+      appBar: CustomAppBar(title: AppStrings.navProfile, showBackButton: false),
       body: auth.isGuest ? const _GuestProfile() : _AccountProfile(auth: auth),
     );
   }
@@ -40,6 +40,7 @@ class _AccountProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = auth.user!;
+    final settings = ref.watch(settingsProvider);
     final talent = user.role == UserRole.talent ? ref.watch(talentByUserIdProvider(user.id)) : null;
     final recruiter = user.role == UserRole.recruiter ? ref.watch(recruiterByUserIdProvider(user.id)) : null;
 
@@ -66,43 +67,61 @@ class _AccountProfile extends ConsumerWidget {
           if (talent != null) ...[
             Row(
               children: [
-                Expanded(child: KrStatCard(icon: Iconsax.star_1, value: Formatters.formatRating(talent.rating), label: 'Rating', animateCounter: false)),
+                Expanded(child: KrStatCard(icon: Iconsax.star_1, value: Formatters.formatRating(talent.rating), label: AppStrings.rating, animateCounter: false)),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: KrStatCard(icon: Iconsax.eye, value: Formatters.formatCount(talent.viewCount), label: 'Views', animateCounter: false)),
+                Expanded(child: KrStatCard(icon: Iconsax.eye, value: Formatters.formatCount(talent.viewCount), label: AppStrings.views, animateCounter: false)),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: KrStatCard(icon: Iconsax.medal_star, value: '${talent.yearsOfExperience}', label: 'Yrs Exp.')),
+                Expanded(child: KrStatCard(icon: Iconsax.medal_star, value: '${talent.yearsOfExperience}', label: AppStrings.yrsExp)),
               ],
             ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
             const SizedBox(height: AppSpacing.xl),
           ] else if (recruiter != null) ...[
             Row(
               children: [
-                Expanded(child: KrStatCard(icon: Iconsax.briefcase, value: '${recruiter.castingCount}', label: 'Castings')),
+                Expanded(child: KrStatCard(icon: Iconsax.briefcase, value: '${recruiter.castingCount}', label: AppStrings.castings)),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: KrStatCard(icon: Iconsax.crown_1, value: '${recruiter.hireCount}', label: 'Hires')),
+                Expanded(child: KrStatCard(icon: Iconsax.crown_1, value: '${recruiter.hireCount}', label: AppStrings.hires)),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: KrStatCard(icon: Iconsax.star_1, value: Formatters.formatRating(recruiter.rating), label: 'Rating', animateCounter: false)),
+                Expanded(child: KrStatCard(icon: Iconsax.star_1, value: Formatters.formatRating(recruiter.rating), label: AppStrings.rating, animateCounter: false)),
               ],
             ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
             const SizedBox(height: AppSpacing.xl),
           ],
+          _LanguageToggle(
+            isArabic: settings.language == AppLanguage.ar,
+            onChanged: (arabic) => ref.read(settingsProvider.notifier).setLanguage(
+                  arabic ? AppLanguage.ar : AppLanguage.en,
+                  markChosen: false,
+                ),
+          ).animate().fadeIn(delay: 220.ms, duration: 400.ms),
+          const SizedBox(height: AppSpacing.md),
           _MenuSection(
             items: [
-              _MenuItem(icon: Iconsax.user_edit, label: 'Edit Profile', onTap: () => context.push(RouteNames.editProfile)),
-              _MenuItem(icon: Iconsax.heart, label: 'Favorites', onTap: () => context.push(RouteNames.favorites)),
-              _MenuItem(icon: Iconsax.notification, label: 'Notifications', onTap: () => context.push(RouteNames.notifications)),
+              _MenuItem(icon: Iconsax.user_edit, label: AppStrings.editProfile, onTap: () => context.push(RouteNames.editProfile)),
+              _MenuItem(icon: Iconsax.crown_1, label: AppStrings.pricing, onTap: () => context.push(RouteNames.pricing)),
+              _MenuItem(icon: Iconsax.heart, label: AppStrings.favorites, onTap: () => context.push(RouteNames.favorites)),
+              _MenuItem(icon: Iconsax.notification, label: AppStrings.notifications, onTap: () => context.push(RouteNames.notifications)),
               if (user.role == UserRole.admin)
-                _MenuItem(icon: Iconsax.shield_tick, label: 'Admin Console', onTap: () => context.push(RouteNames.admin)),
-              _MenuItem(icon: Iconsax.setting_2, label: 'Settings', onTap: () => context.push(RouteNames.settings)),
+                _MenuItem(icon: Iconsax.shield_tick, label: AppStrings.adminConsole, onTap: () => context.push(RouteNames.admin)),
+              _MenuItem(icon: Iconsax.setting_2, label: AppStrings.settings, onTap: () => context.push(RouteNames.settings)),
             ],
           ).animate().fadeIn(delay: 260.ms, duration: 400.ms),
+          const SizedBox(height: AppSpacing.md),
+          _MenuSection(
+            items: [
+              _MenuItem(icon: Iconsax.info_circle, label: AppStrings.aboutKastRolz, onTap: () => context.push(RouteNames.about)),
+              _MenuItem(icon: Iconsax.sms, label: AppStrings.contactUs, onTap: () => context.push(RouteNames.contact)),
+              _MenuItem(icon: Iconsax.document_text, label: AppStrings.termsOfService, onTap: () => context.push(RouteNames.terms)),
+              _MenuItem(icon: Iconsax.shield_tick, label: AppStrings.privacyPolicy, onTap: () => context.push(RouteNames.privacy)),
+            ],
+          ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
           const SizedBox(height: AppSpacing.xl),
           PremiumButton.danger(
             label: AppStrings.logout,
             fullWidth: true,
             icon: Iconsax.logout,
             onPressed: () => _confirmLogout(context, ref),
-          ).animate().fadeIn(delay: 320.ms, duration: 400.ms),
+          ).animate().fadeIn(delay: 340.ms, duration: 400.ms),
         ],
       ),
     );
@@ -112,10 +131,10 @@ class _AccountProfile extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text(AppStrings.confirmLogoutTitle),
-        content: const Text(AppStrings.confirmLogoutBody),
+        title: Text(AppStrings.confirmLogoutTitle),
+        content: Text(AppStrings.confirmLogoutBody),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text(AppStrings.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppStrings.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(AppStrings.logout, style: const TextStyle(color: AppColors.error)),
@@ -134,37 +153,82 @@ class _GuestProfile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const KrAvatar(initials: 'G', size: KrAvatarSize.xl),
-            const SizedBox(height: AppSpacing.lg),
-            Text('You\'re Browsing as Guest', style: AppTextStyles.sectionTitle, textAlign: TextAlign.center),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'Create a free account to build your profile, apply to castings and message recruiters.',
-              style: AppTextStyles.bodyMuted,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            PremiumButton.primary(
-              label: AppStrings.register,
-              fullWidth: true,
-              onPressed: () => context.push(RouteNames.register),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            PremiumButton.secondary(
-              label: AppStrings.login,
-              fullWidth: true,
-              onPressed: () => ref.read(authProvider.notifier).logout(),
-            ),
-          ],
-        ),
+    final settings = ref.watch(settingsProvider);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, AppSpacing.xxxl),
+      child: Column(
+        children: [
+          const KrAvatar(initials: 'G', size: KrAvatarSize.xl),
+          const SizedBox(height: AppSpacing.lg),
+          Text(AppStrings.browsingAsGuest, style: AppTextStyles.sectionTitle, textAlign: TextAlign.center),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            AppStrings.guestCtaBody,
+            style: AppTextStyles.bodyMuted,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          _LanguageToggle(
+            isArabic: settings.language == AppLanguage.ar,
+            onChanged: (arabic) => ref.read(settingsProvider.notifier).setLanguage(
+                  arabic ? AppLanguage.ar : AppLanguage.en,
+                  markChosen: false,
+                ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _MenuSection(
+            items: [
+              _MenuItem(icon: Iconsax.info_circle, label: AppStrings.aboutKastRolz, onTap: () => context.push(RouteNames.about)),
+              _MenuItem(icon: Iconsax.sms, label: AppStrings.contactUs, onTap: () => context.push(RouteNames.contact)),
+              _MenuItem(icon: Iconsax.document_text, label: AppStrings.termsOfService, onTap: () => context.push(RouteNames.terms)),
+              _MenuItem(icon: Iconsax.shield_tick, label: AppStrings.privacyPolicy, onTap: () => context.push(RouteNames.privacy)),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          PremiumButton.primary(
+            label: AppStrings.register,
+            fullWidth: true,
+            onPressed: () => context.push(RouteNames.register),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          PremiumButton.secondary(
+            label: AppStrings.login,
+            fullWidth: true,
+            onPressed: () => ref.read(authProvider.notifier).logout(),
+          ),
+        ],
       ),
     ).animate().fadeIn(duration: 400.ms);
+  }
+}
+
+class _LanguageToggle extends StatelessWidget {
+  const _LanguageToggle({required this.isArabic, required this.onChanged});
+
+  final bool isArabic;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedCard(
+      padding: EdgeInsets.zero,
+      child: Material(
+        color: Colors.transparent,
+        child: SwitchListTile(
+          value: isArabic,
+          onChanged: onChanged,
+          secondary: const Icon(Iconsax.global, size: 20, color: AppColors.gold),
+          title: Text(AppStrings.language, style: AppTextStyles.body),
+          subtitle: Text(
+            isArabic ? AppStrings.languageArabic : AppStrings.languageEnglish,
+            style: AppTextStyles.bodySmall,
+          ),
+          activeThumbColor: AppColors.gold,
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        ),
+      ),
+    );
   }
 }
 
@@ -190,11 +254,20 @@ class _MenuSection extends StatelessWidget {
           final item = entry.value;
           return Column(
             children: [
-              ListTile(
-                onTap: item.onTap,
-                leading: Icon(item.icon, size: 20, color: AppColors.gold),
-                title: Text(item.label, style: AppTextStyles.body),
-                trailing: const Icon(Iconsax.arrow_right_3, size: 16, color: AppColors.textMuted),
+              Material(
+                color: Colors.transparent,
+                child: ListTile(
+                  onTap: item.onTap,
+                  leading: Icon(item.icon, size: 20, color: AppColors.gold),
+                  title: Text(item.label, style: AppTextStyles.body),
+                  trailing: Icon(
+                    Directionality.of(context) == TextDirection.rtl
+                        ? Iconsax.arrow_left_3
+                        : Iconsax.arrow_right_3,
+                    size: 16,
+                    color: AppColors.textMuted,
+                  ),
+                ),
               ),
               if (!isLast) const Divider(height: 1, indent: AppSpacing.lg, endIndent: AppSpacing.lg),
             ],

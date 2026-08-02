@@ -40,7 +40,7 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(title: 'Messages', showBackButton: false),
+      appBar: CustomAppBar(title: AppStrings.navMessages, showBackButton: false),
       body: user == null
           ? _GuestPrompt(isGuest: auth.isGuest)
           : Column(
@@ -49,7 +49,7 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen> {
                   padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.sm),
                   child: KrSearchBar(
                     controller: _searchController,
-                    hintText: 'Search conversations…',
+                    hintText: AppStrings.searchConversations,
                     onChanged: (v) => setState(() => _query = v),
                   ),
                 ),
@@ -93,10 +93,10 @@ class _ConversationList extends ConsumerWidget {
       return Center(
         child: EmptyState(
           icon: Iconsax.messages_3,
-          title: query.trim().isEmpty ? AppStrings.emptyMessagesTitle : 'No Conversations Found',
+          title: query.trim().isEmpty ? AppStrings.emptyMessagesTitle : AppStrings.noConversationsFound,
           subtitle: query.trim().isEmpty
               ? AppStrings.emptyMessagesSubtitle
-              : 'Try a different name or keyword.',
+              : AppStrings.tryDifferentName,
         ),
       );
     }
@@ -113,7 +113,7 @@ class _ConversationList extends ConsumerWidget {
         final unread = conversation.unreadCountFor(userId);
         final typing = conversation.isTypingFor(otherId);
         final displayName =
-            _participantName(ref, otherId).orPlaceholder(other?.fullName ?? 'KAST-ROLZ User');
+            _participantName(ref, otherId).orPlaceholder(other?.fullName ?? AppStrings.kastRolzUser);
 
         return InkWell(
           onTap: () => context.push(RouteNames.chatPath(conversation.id)),
@@ -142,9 +142,9 @@ class _ConversationList extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Text(
                         typing
-                            ? 'Typing…'
+                            ? AppStrings.typing
                             : (conversation.lastMessage.isEmpty
-                                ? 'Say hello 👋'
+                                ? AppStrings.sayHelloWave
                                 : conversation.lastMessage),
                         style: AppTextStyles.bodySmall.copyWith(
                           color: typing ? AppColors.gold : AppColors.textSecondary,
@@ -191,9 +191,9 @@ class _GuestPrompt extends StatelessWidget {
     return Center(
       child: EmptyState(
         icon: Iconsax.messages_3,
-        title: isGuest ? 'Sign Up to Message' : AppStrings.emptyMessagesTitle,
+        title: isGuest ? AppStrings.signUpToMessage : AppStrings.emptyMessagesTitle,
         subtitle: isGuest
-            ? 'Create a free account to start conversations with talents and recruiters.'
+            ? AppStrings.signUpToMessageBody
             : AppStrings.emptyMessagesSubtitle,
         ctaLabel: isGuest ? AppStrings.register : null,
         onCtaTap: isGuest ? () => context.push(RouteNames.register) : null,

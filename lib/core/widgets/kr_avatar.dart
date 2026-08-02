@@ -79,6 +79,19 @@ class KrAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diameter = size.diameter;
+    final border = size.borderWidth;
+    final inner = diameter - border * 2;
+
+    Widget image = imageUrl != null && imageUrl!.isNotEmpty
+        ? CachedNetworkImage(
+            imageUrl: imageUrl!,
+            width: inner,
+            height: inner,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => _fallback(inner),
+            errorWidget: (context, url, error) => _fallback(inner),
+          )
+        : _fallback(inner);
 
     Widget avatar = Container(
       width: diameter,
@@ -88,18 +101,17 @@ class KrAvatar extends StatelessWidget {
         color: AppColors.cardElevated,
         border: Border.all(
           color: borderColor ?? AppColors.border,
-          width: size.borderWidth,
+          width: border,
         ),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: imageUrl != null && imageUrl!.isNotEmpty
-          ? CachedNetworkImage(
-              imageUrl: imageUrl!,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => _fallback(diameter),
-              errorWidget: (context, url, error) => _fallback(diameter),
-            )
-          : _fallback(diameter),
+      alignment: Alignment.center,
+      child: ClipOval(
+        child: SizedBox(
+          width: inner,
+          height: inner,
+          child: image,
+        ),
+      ),
     );
 
     if (heroTag != null) {
@@ -108,31 +120,35 @@ class KrAvatar extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          avatar,
-          if (verified)
-            Positioned(
-              right: -1,
-              bottom: -1,
-              child: _VerifiedDot(size: size.badgeSize),
-            ),
-          if (online && !verified)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: size.badgeSize * 0.75,
-                height: size.badgeSize * 0.75,
-                decoration: BoxDecoration(
-                  color: AppColors.success,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.background, width: 2),
+      child: SizedBox(
+        width: diameter,
+        height: diameter,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            avatar,
+            if (verified)
+              PositionedDirectional(
+                end: -1,
+                bottom: -1,
+                child: _VerifiedDot(size: size.badgeSize),
+              ),
+            if (online && !verified)
+              PositionedDirectional(
+                end: 0,
+                bottom: 0,
+                child: Container(
+                  width: size.badgeSize * 0.75,
+                  height: size.badgeSize * 0.75,
+                  decoration: BoxDecoration(
+                    color: AppColors.success,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.background, width: 2),
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
