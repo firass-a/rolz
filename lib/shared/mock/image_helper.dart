@@ -1,28 +1,28 @@
 /// Curated Unsplash media for KAST-ROLZ mock profiles.
-/// Every URL points at a real people / cinema / studio photo — never random
-/// animal placeholders like picsum.photos.
+/// Prefer professional, modest portraits and cinema/fashion covers —
+/// no swimwear or revealing crop-top fashion.
 library;
 
-/// Women portrait pool (headshots / models / actresses).
+/// Women portrait pool — professional headshots & modest fashion.
 const List<String> _womenPortraits = [
-  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1524504388940-b1c17226555e?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&h=1000&q=80',
   'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&h=1000&q=80',
   'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&h=1000&q=80',
   'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1526510747491-58f928ec870f?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1573497019236-17f669f1eefb?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1589156280159-27614880fca9?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?auto=format&fit=crop&w=800&h=1000&q=80',
   'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1464863979621-258859e62245?auto=format&fit=crop&w=800&h=1000&q=80',
-  'https://images.unsplash.com/photo-1524638431109-93d95c968f03?auto=format&fit=crop&w=800&h=1000&q=80',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&h=1000&q=80',
   'https://images.unsplash.com/photo-1614283233556-f74a681b5b2c?auto=format&fit=crop&w=800&h=1000&q=80',
   'https://images.unsplash.com/photo-1592621385612-4d7129426394?auto=format&fit=crop&w=800&h=1000&q=80',
 ];
@@ -51,28 +51,42 @@ const List<String> _menPortraits = [
   'https://images.unsplash.com/photo-1557862921-37829c790f19?auto=format&fit=crop&w=800&h=1000&q=80',
 ];
 
-/// Cinema / set / fashion covers & casting banners.
+/// Cinema / set / modest fashion covers & casting banners.
 const List<String> _covers = [
-  'https://images.unsplash.com/photo-1485846234645-a62644f84781?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1594909120338-4d3ff1e0ba11?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1517604931441-480d8f8c5c9a?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1616530940355-351fabd9524b?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1585951237313-1979e4df7385?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1518676590629-3bba029aaaaf?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&h=600&q=80',
-  'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&h=600&q=80',
+  'https://images.unsplash.com/photo-1485846234645-a62644f84781?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1517604931441-480d8f8c5c9a?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1594909120338-4d3ff1e0ba11?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1518676590629-3bba029aaaaf?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1558171813-4c0880aa3757?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&h=800&q=80',
+];
+
+/// Agency cover banners — film sets, casting rooms, professional studios.
+const List<String> _agencyCovers = [
+  'https://images.unsplash.com/photo-1485846234645-a62644f84781?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1518676590629-3bba029aaaaf?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&h=800&q=80',
+  'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&h=800&q=80',
 ];
 
 /// Studio / office / brand squares for agencies & thumbnails.
@@ -113,6 +127,10 @@ String portraitUrl(String seed, {bool? female}) {
 
 /// Wide cover / casting banner.
 String coverUrl(String seed) => _covers[_stableHash('cover-$seed') % _covers.length];
+
+/// Agency profile cover (film / office / casting — never fashion crop-tops).
+String agencyCoverUrl(String seed) =>
+    _agencyCovers[_stableHash('agency-cover-$seed') % _agencyCovers.length];
 
 /// Square logo / thumbnail.
 String squareUrl(String seed) => _squares[_stableHash('sq-$seed') % _squares.length];

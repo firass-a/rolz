@@ -349,7 +349,7 @@ const List<_CastingSeed> _castingSeeds = [
     shootEndDays: 210,
     isFeatured: true,
     imageUrl:
-        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1200&h=800&q=80',
+        'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Djezzy Mobile — Spot Publicitaire',
@@ -545,7 +545,7 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: -20,
     shootEndDays: -18,
     imageUrl:
-        'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&h=800&q=80',
+        'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Le Dernier Tramway — Court Métrage',
@@ -570,7 +570,7 @@ const List<_CastingSeed> _castingSeeds = [
     shootStartDays: 50,
     shootEndDays: 55,
     imageUrl:
-        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&h=800&q=80',
+        'https://images.unsplash.com/photo-1485846234645-a62644f84781?auto=format&fit=crop&w=1200&h=800&q=80',
   ),
   _CastingSeed(
     title: 'Co-production Internationale — Figuration',
@@ -894,7 +894,7 @@ class MockData {
         id: id,
         name: name,
         logoUrl: squareUrl('$id-logo'),
-        coverUrl: coverUrl('$id-cover'),
+        coverUrl: agencyCoverUrl('$id-cover'),
         description:
             "$name accompagne des talents émergents et confirmés à travers l'Algérie et la région MENA, avec un réseau de partenaires dans le cinéma, la télévision et la mode.\n\n"
             '$name supports emerging and established talents across Algeria and the MENA region, with a partner network spanning film, television and fashion.',

@@ -196,7 +196,7 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                     KrSectionHeader(title: AppStrings.similarCastings, padding: EdgeInsets.zero),
                     const SizedBox(height: AppSpacing.md),
                     SizedBox(
-                      height: 240,
+                      height: 176,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: similar.length,
@@ -206,6 +206,7 @@ class _CastingDetailScreenState extends ConsumerState<CastingDetailScreen> {
                           return SizedBox(
                             width: 260,
                             child: KrCastingCard(
+                              compact: true,
                               title: DisplayLocalizer.t(c.title),
                               bannerUrl: c.bannerUrl,
                               role: DisplayLocalizer.t(c.role),
